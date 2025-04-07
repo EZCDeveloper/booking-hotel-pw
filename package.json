@@ -15,6 +15,7 @@
     "test": "tests"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "fsevents": "^2.3.2",
     "playwright": "^1.51.1",
     "playwright-core": "^1.51.1",

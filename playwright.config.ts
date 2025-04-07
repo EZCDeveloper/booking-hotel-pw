@@ -1,4 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import path from 'path';
+
+// Refactor for for other environments
+dotenv.config({
+  path: path.resolve(__dirname, `.env.local`),
+  override: true
+});
 
 
 export default defineConfig({
@@ -9,12 +17,13 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: process.env.BASE_URL,
     trace: 'on-first-retry',
   },
   projects: [
     {
-      name: 'chromium',
+      name: 'myTests',
+      testMatch: /.*\.spec\.ts|.*\.test\.ts/,
       use: { ...devices['Desktop Chrome'] },
     },
   ],
