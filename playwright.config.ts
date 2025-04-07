@@ -22,9 +22,20 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'setup',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+      testMatch: /.*\.setup\.ts/,
+    },
+    {
       name: 'myTests',
       testMatch: /.*\.spec\.ts|.*\.test\.ts/,
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/adminUser.json'
+      },
+      dependencies: ['setup']
     },
   ],
 });
