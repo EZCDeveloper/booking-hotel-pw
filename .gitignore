@@ -8,3 +8,5 @@ node_modules/
 
 # Environments
 .env.local
+.env.staging
+.env.prod

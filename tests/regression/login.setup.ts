@@ -1,12 +1,23 @@
-import { test as setup } from "@playwright/test"
+import { test as setup } from '../../fixtures/myFixtures/allFixtures';
+import { UserRoles } from '../../support/auth/user-roles';
+import { LoginPage } from '../../support/pages/login.page';
+import path from 'path';
 
+const authFile = {
+    [UserRoles.ADMIN]: path.join(__dirname, '../../.auth/admin.json'),
+    [UserRoles.CUSTOMER]: path.join(__dirname, '../../.auth/customer.json')
+};
 
-setup('Create Admin Auth', async ({ page }) => {
-    const baseUrl = process.env.BASE_URL as string
-    await page.goto(baseUrl)
+setup(`Create ${UserRoles.ADMIN} Auth`, async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.loginAs(UserRoles.ADMIN);
 
-    await page.getByRole('link', { name: 'Sign In' }).click();
-    await page.getByRole('textbox', { name: 'Email' }).fill('myemailhere@gmail.com');
-    await page.getByRole('textbox', { name: 'Password' }).fill('123456789');
-    await page.getByRole('button', { name: 'Login' }).click();
-})
+    await page.context().storageState({ path: authFile[UserRoles.ADMIN] });
+});
+
+setup(`Create ${UserRoles.CUSTOMER} Auth`, async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.loginAs(UserRoles.CUSTOMER);
+
+    await page.context().storageState({ path: authFile[UserRoles.CUSTOMER] });
+});

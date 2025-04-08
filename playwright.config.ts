@@ -4,7 +4,7 @@ import path from 'path';
 
 // Refactor for for other environments
 dotenv.config({
-  path: path.resolve(__dirname, `.env.local`),
+  path: path.resolve(__dirname, `.env.staging`),
   override: true
 });
 
@@ -24,7 +24,8 @@ export default defineConfig({
     {
       name: 'setup',
       use: {
-        ...devices['Desktop Chrome'],
+        //...devices['Desktop Chrome'],
+        headless: true
       },
       testMatch: /.*\.setup\.ts/,
     },
@@ -32,8 +33,9 @@ export default defineConfig({
       name: 'myTests',
       testMatch: /.*\.spec\.ts|.*\.test\.ts/,
       use: {
-        ...devices['Desktop Chrome'],
-        storageState: '.auth/adminUser.json'
+        //...devices['Desktop Chrome'],
+        headless: true,
+        //storageState: '.auth/adminUser.json'
       },
       dependencies: ['setup']
     },
