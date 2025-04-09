@@ -7,51 +7,55 @@ test.describe('TS01_Register', () => {
     test.beforeEach(async ({ }) => {
     })
 
-    test('TC01. Register Successfully', async ({ page }) => {
-        console.log("Homework Challenge");
-    });
+    test('TC01. Should register as Hotel Owner successfully',
+        async ({ page }) => {
+            console.log("Homework Challenge");
+        });
 
-    test('TC02. Fail to register a user: email address already exists in the database', async ({ page }) => {
-        console.log("Homework Challenge");
-    });
+    test('TC02[-]. Should fail to register as Hotel Owner: email already exists',
+        async ({ page }) => {
+            console.log("Homework Challenge");
+        });
 
-    test('TC03. Fail to register a user: password has not minimum length', async ({ page }) => {
-        console.log("Homework Challenge");
-    });
+    test('TC03. Should register as Customer successfully',
+        async ({ page }) => {
+            console.log("Homework Challenge");
+        });
 
+    test('TC04[-]. Should fail to register as Customer: email already exists',
+        async ({ page }) => {
+            console.log("Homework Challenge");
+        });
 })
 
 // TODO: Check the tests
 
-test.describe('TS01_Admin Functionality Tests', () => {
-    // Use admin storage state for all tests in this describe block
-    test.use({ storageState: Users[UserRoles.ADMIN].authFile });
+test.describe('TS02_Login', () => {
+    test('TC-001: Verify ADMIN access', async ({ page, basePage, context }) => {
+        // Ensure we're using the admin storage state
+        await context.addInitScript(() => {
+            window.localStorage.setItem('userRole', UserRoles.ADMIN);
+        });
 
-    test('TC-001: Verify Admin Dashboard Access', async ({ page, loginPage }) => {
-        // Navigate to base URL
-        await page.goto(process.env.BASE_URL as string);
+        // Navigate to home page
+        await basePage.navigateTo('/');
 
-        // Optional: You can still use loginPage if needed
-        // await loginPage.loginAs(UserRoles.ADMIN);
-
-        // Add assertions specific to admin role
-        const adminDashboardTitle = await page.getByRole('heading', { name: 'Admin Dashboard' });
-        expect(adminDashboardTitle).toBeVisible();
-
-        // Example of admin-specific action
-        const createUserButton = await page.getByRole('button', { name: 'Create User' });
-        expect(createUserButton).toBeVisible();
+        // Verify admin-specific elements or access
+        const adminElements = page.getByRole('navigation').getByText('Admin Panel');
+        await expect(adminElements).toBeVisible();
     });
 
-    test('TC-Admin: Verify Admin Permissions', async ({ page }) => {
-        await page.goto(process.env.BASE_URL as string);
+    test('TC-002: Verify CUSTOMER access', async ({ page, basePage, context }) => {
+        // Ensure we're using the customer storage state
+        await context.addInitScript(() => {
+            window.localStorage.setItem('userRole', UserRoles.CUSTOMER);
+        });
 
-        // Check for admin-specific elements or actions
-        const adminSettingsMenu = await page.getByRole('link', { name: 'Admin Settings' });
-        expect(adminSettingsMenu).toBeVisible();
+        // Navigate to home page
+        await basePage.navigateTo('/');
 
-        // You can add more specific checks for admin privileges
-        const sensitiveDataTable = await page.getByTestId('sensitive-data-table');
-        expect(sensitiveDataTable).toBeVisible();
+        // Verify customer-specific elements
+        const customerElements = page.getByRole('heading', { name: 'My Bookings' });
+        await expect(customerElements).toBeVisible();
     });
 });
