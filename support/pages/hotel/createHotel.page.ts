@@ -16,6 +16,7 @@ export class CreateHotelPage {
     private imageFileInput = () => this.page.locator('input[name="imageFiles"]');
     private saveButton = () => this.page.getByRole('button', { name: 'Save' });
     private hotelSavedNotification = () => this.page.locator('#root');
+    private errorMessageLocator = () => this.page.locator('.error-message');
 
     constructor(page: Page) {
         this.page = page;
@@ -32,7 +33,10 @@ export class CreateHotelPage {
     }
 
     async fillBasicHotelDetails(details: HotelDetails): Promise<CreateHotelPage> {
-        await this.nameInput().fill(details.name);
+        // Optional name input: only fill if name is truthy (not null, undefined, or empty string)
+        if (details.name) {
+            await this.nameInput().fill(details.name);
+        }
         await this.cityInput().fill(details.city);
         await this.countryInput().fill(details.country);
         await this.descriptionInput().fill(details.description);
@@ -72,6 +76,17 @@ export class CreateHotelPage {
     async verifyHotelSaved(): Promise<CreateHotelPage> {
         await expect(this.hotelSavedNotification()).toContainText('Hotel Saved!');
         return this;
+    }
+
+    async getErrorMessage(): Promise<string> {
+        // Wait for the error message to be visible with a timeout
+        try {
+            await this.errorMessageLocator().waitFor({ state: 'visible', timeout: 5000 });
+            return await this.errorMessageLocator().textContent() || '';
+        } catch {
+            // If no error message is found, return an empty string
+            return '';
+        }
     }
 
     async createHotel(hotelDetails: HotelDetails): Promise<CreateHotelPage> {
