@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 import { HotelDetails } from '../../../fixtures/data/test-data';
 
 export class CreateHotelPage {
@@ -104,5 +104,10 @@ export class CreateHotelPage {
             .then(() => this.verifyHotelSaved());
 
         return this;
+    }
+
+    // Gets the validation error message for the name input field
+    async getNameFieldError() {
+        return this.page.getByText('This field is required').first()
     }
 }
