@@ -4,6 +4,10 @@ import { HotelDetails } from '../../../fixtures/data/test-data';
 export class CreateHotelPage {
     private page: Page;
 
+    constructor(page: Page) {
+        this.page = page;
+    }
+
     // Locators
     private myHotelsLink = () => this.page.getByRole('link', { name: 'My Hotels' });
     private addHotelLink = () => this.page.getByRole('link', { name: 'Add Hotel' });
@@ -16,11 +20,7 @@ export class CreateHotelPage {
     private imageFileInput = () => this.page.locator('input[name="imageFiles"]');
     private saveButton = () => this.page.getByRole('button', { name: 'Save' });
     private hotelSavedNotification = () => this.page.locator('#root');
-    private errorMessageLocator = () => this.page.locator('.error-message');
 
-    constructor(page: Page) {
-        this.page = page;
-    }
 
     async navigateToMyHotels(): Promise<CreateHotelPage> {
         await this.myHotelsLink().click();
@@ -76,17 +76,6 @@ export class CreateHotelPage {
     async verifyHotelSaved(): Promise<CreateHotelPage> {
         await expect(this.hotelSavedNotification()).toContainText('Hotel Saved!');
         return this;
-    }
-
-    async getErrorMessage(): Promise<string> {
-        // Wait for the error message to be visible with a timeout
-        try {
-            await this.errorMessageLocator().waitFor({ state: 'visible', timeout: 5000 });
-            return await this.errorMessageLocator().textContent() || '';
-        } catch {
-            // If no error message is found, return an empty string
-            return '';
-        }
     }
 
     async createHotel(hotelDetails: HotelDetails): Promise<CreateHotelPage> {
