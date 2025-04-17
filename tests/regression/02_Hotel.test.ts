@@ -42,25 +42,34 @@ test.describe('TS01_Edit a Hotel', () => {
 
     test.use({ storageState: Users[UserRoles.ADMIN].authFile });
 
-    // TODO: Should test this.
-    test('TC-001: Should Edit a Hotel', async ({ basePage, createHotelPage, apiHelper }) => {
-        // 0. Create Hotel via API using fixture data
-        const createdHotel = await apiHelper.createHotel(Users[UserRoles.ADMIN].authFile, apiHotel);
+    test('TC-001: Should Edit a Hotel', async ({ page, basePage, createHotelPage, myHotelsPage, apiHelper }) => {
+        let createdHotel;
+        try {
+            // 0. Create Hotel via API using fixture data
+            createdHotel = await apiHelper.createHotel(Users[UserRoles.ADMIN].authFile, apiHotel);
+            console.log('Hotel created successfully:', JSON.stringify(createdHotel, null, 2));
+        } catch (error) {
+            console.error('Failed to create hotel:', error);
+            // Log additional context about the error
+            if (error instanceof Error) {
+                console.error('Error name:', error.name);
+                console.error('Error message:', error.message);
+                console.error('Error stack:', error.stack);
+            }
+            throw error; // Re-throw to fail the test
+        }
 
         // 1. Login and navigate to home page
         await basePage.navigateTo('/');
 
         // 2. Edit the name of the hotel via UI
-        await createHotelPage.navigateToMyHotels();
-        // Placeholder for selecting and editing:
-        // await createHotelPage.selectHotelByName(createdHotel.name);
-        // await createHotelPage.editHotelName('New Hotel Name');
-        // await createHotelPage.saveHotel();
+        await createHotelPage.navigateTo(TEST_COPY.HEADER_NAV.MY_HOTELS)
 
-        // 3. Verify that the hotel name is updated
-        // await expect(await createHotelPage.getHotelName()).toBe('New Hotel Name');
-        // (You may need to implement selectHotelByName, editHotelName, getHotelName in the page object)
+        const myHotels = page.getByRole('heading', { name: 'My Hotels' }).filter({ visible: true })
+        expect(myHotels).toBeTruthy()
+
+        // Filter hotel cards by text and click 'View Details'
+        // Extrae una función para encontrar la tarjeta del hotel por nombre
+        await myHotelsPage.watchHotelDetails("Grandes Aventuras");
     });
-
-
 })

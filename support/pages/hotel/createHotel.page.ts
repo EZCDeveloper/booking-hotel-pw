@@ -9,7 +9,6 @@ export class CreateHotelPage {
     }
 
     // Locators
-    private myHotelsLink = () => this.page.getByRole('link', { name: 'My Hotels' });
     private addHotelLink = () => this.page.getByRole('link', { name: 'Add Hotel' });
     private nameInput = () => this.page.getByRole('textbox', { name: 'Name' });
     private cityInput = () => this.page.getByRole('textbox', { name: 'City' });
@@ -22,9 +21,8 @@ export class CreateHotelPage {
     private hotelSavedNotification = () => this.page.locator('#root');
 
 
-    async navigateToMyHotels(): Promise<CreateHotelPage> {
-        await this.myHotelsLink().click();
-        return this;
+    async navigateTo(path: string): Promise<void> {
+        return this.page.getByRole('link', { name: `${path}` }).click();
     }
 
     async clickAddHotel(): Promise<CreateHotelPage> {

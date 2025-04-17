@@ -1,6 +1,6 @@
 {
     "userId": "67ebe245f1c9f437b64771d6",
-    "name": "Buenos Vientos",
+    "name": "Grandes Aventuras",
     "city": "Bariloche",
     "country": "Argentina",
     "description": "Beautiful hotel.",
@@ -16,9 +16,5 @@
     "starRating": 3,
     "imageUrls": [
         "http://res.cloudinary.com/dsmi6r5mn/image/upload/v1744807877/ahaxpor6anabefopdxcq.jpg"
-    ],
-    "lastUpdated": "2025-04-16T12:51:17.817Z",
-    "_id": "67ffa7c539079718a0ca21c4",
-    "bookings": [],
-    "__v": 0
+    ]
 }

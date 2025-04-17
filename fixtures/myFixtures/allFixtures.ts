@@ -3,11 +3,13 @@ import { BasePage } from "../../support/pages/base.page";
 import { LoginPage } from "../../support/pages/login.page";
 import { CreateHotelPage } from "../../support/pages/hotel/createHotel.page";
 import { ApiHelper } from "../../support/helpers/apiHelper";
+import { MyHotelsPage } from "../../support/pages/hotel/myHotels.page";
 
 type PageFixtures = {
     basePage: BasePage;
     loginPage: LoginPage;
     createHotelPage: CreateHotelPage;
+    myHotelsPage: MyHotelsPage;
 }
 
 export type ApiFixtures = {
@@ -27,6 +29,10 @@ export const test = baseTest.extend<PageFixtures & ApiFixtures>({
     createHotelPage: async ({ page }, use) => {
         const createHotelPage = new CreateHotelPage(page);
         await use(createHotelPage);
+    },
+    myHotelsPage: async ({ page }, use) => {
+        const myHotelsPage = new MyHotelsPage(page);
+        await use(myHotelsPage);
     },
 
     /*-- API --*/
