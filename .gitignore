@@ -11,5 +11,5 @@ node_modules/
 .env.staging
 .env.prod
 
-# Authenticacion
+# Authentication
 /.auth/
