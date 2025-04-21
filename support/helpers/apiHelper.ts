@@ -1,58 +1,124 @@
-import { Page } from "@playwright/test";
-import { request } from '@playwright/test';
-import hotelData from '../../fixtures/data/apiHotel.json';
+// support/helpers/apiHelper.ts
+import { APIRequestContext, request, expect } from '@playwright/test';
 
 export class ApiHelper {
-    private page: Page;
+    private apiContext: APIRequestContext;
 
-    constructor(page: Page) {
-        this.page = page;
+    constructor(apiContext: APIRequestContext) {
+        this.apiContext = apiContext;
     }
 
-    async createHotel(storageStatePath?: string, hotelPayload?: any) {
-        // Validate storage state path
-        if (!storageStatePath) {
-            throw new Error('Storage state path is required for authentication');
-        }
+    // --- USER METHODS ---
+    async registerUser(userData: any) {
+        const response = await this.apiContext.post('/users/register', { data: userData });
+        return response;
+    }
 
-        // Validate storage state file exists
-        const fs = require('fs');
-        if (!fs.existsSync(storageStatePath)) {
-            throw new Error(`Authentication file not found: ${storageStatePath}`);
-        }
+    async loginUser(email: string, password: string) {
+        const response = await this.apiContext.post('/auth/login', { data: { email, password } });
+        return response;
+    }
 
-        // Allow passing custom payload, default to apiHotel.json
-        const payload = hotelPayload || hotelData;
-
-        console.log('Creating hotel with payload:', JSON.stringify(payload, null, 2));
-        console.log('Using authentication file:', storageStatePath);
-
-        // Create a request context with authentication
+    async validateToken(authCookie: string) {
         const context = await request.newContext({
-            storageState: storageStatePath
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-
-        try {
-            const response = await context.post('http://localhost:7000/api/my-hotels', {
-                data: payload,
-            });
-
-            console.log('Response status:', response.status());
-            const responseText = await response.text();
-            console.log('Response body:', responseText);
-
-            if (!response.ok()) {
-                throw new Error(`Failed to create hotel: ${response.status()} - ${responseText}`);
-            }
-
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error creating hotel:', error);
-            throw error;
-        } finally {
-            await context.dispose();
-        }
+        const response = await context.get('/auth/validate-token');
+        await context.dispose();
+        return response;
     }
 
+    async getUserProfile(authCookie: string) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.get('/users/me');
+        await context.dispose();
+        return response;
+    }
+
+    // --- HOTEL METHODS ---
+    async searchHotels(destination: string) {
+        const response = await this.apiContext.get(`/hotels/search?destination=${destination}`);
+        return response;
+    }
+
+    async getAllHotels() {
+        const response = await this.apiContext.get('/hotels');
+        return response;
+    }
+
+    async getMyHotels(authCookie: string) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.get('/my-hotels');
+        await context.dispose();
+        return response;
+    }
+
+    async createHotel(authCookie: string, hotelData: any) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.post('/my-hotels', { multipart: hotelData });
+        await context.dispose();
+        return response;
+    }
+
+    async updateHotel(authCookie: string, hotelId: string, hotelData: any) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.put(`/my-hotels/${hotelId}`, { multipart: hotelData });
+        await context.dispose();
+        return response;
+    }
+
+    async deleteHotel(authCookie: string, hotelId: string) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.delete(`/my-hotels/${hotelId}`);
+        await context.dispose();
+        return response;
+    }
+
+    async getMyBookings(authCookie: string) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.get('/my-bookings');
+        await context.dispose();
+        return response;
+    }
+
+    async createBooking(authCookie: string, hotelId: string, bookingData: any) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.post(`/hotels/${hotelId}/bookings`, { data: bookingData });
+        await context.dispose();
+        return response;
+    }
+
+    async createPaymentIntent(authCookie: string, paymentData: any) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.post('/bookings/create-payment-intent', { data: paymentData });
+        await context.dispose();
+        return response;
+    }
+
+    async getHotelById(authCookie: string, hotelId: string) {
+        const context = await request.newContext({
+            extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
+        });
+        const response = await context.get(`/my-hotels/${hotelId}`);
+        await context.dispose();
+        return response;
+    }
 }
+
+
