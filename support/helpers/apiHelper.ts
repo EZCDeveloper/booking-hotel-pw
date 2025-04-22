@@ -2,21 +2,29 @@
 import { APIRequestContext, request, expect } from '@playwright/test';
 
 export class ApiHelper {
-    private apiContext: APIRequestContext;
-
-    constructor(apiContext: APIRequestContext) {
-        this.apiContext = apiContext;
-    }
+    constructor(private request: APIRequestContext) { }
 
     // --- USER METHODS ---
     async registerUser(userData: any) {
-        const response = await this.apiContext.post('/users/register', { data: userData });
+        const response = await this.request.post('/users/register', { data: userData });
         return response;
     }
 
     async loginUser(email: string, password: string) {
-        const response = await this.apiContext.post('/auth/login', { data: { email, password } });
+        const response = await this.request.post('/auth/login', { data: { email, password } });
         return response;
+    }
+
+    async getAuthToken(email: string, password: string): Promise<string | undefined> {
+        // Realiza el login usando el método existente
+        const response = await this.loginUser(email, password);
+        expect(response.ok()).toBeTruthy();
+
+        // Extrae las cookies de la respuesta de login
+        const cookies = await this.request.storageState();
+        const authCookie = cookies.cookies?.find((c: any) => c.name === 'auth_token')?.value;
+
+        return authCookie;
     }
 
     async validateToken(authCookie: string) {
@@ -39,12 +47,12 @@ export class ApiHelper {
 
     // --- HOTEL METHODS ---
     async searchHotels(destination: string) {
-        const response = await this.apiContext.get(`/hotels/search?destination=${destination}`);
+        const response = await this.request.get(`/hotels/search?destination=${destination}`);
         return response;
     }
 
     async getAllHotels() {
-        const response = await this.apiContext.get('/hotels');
+        const response = await this.request.get('/hotels');
         return response;
     }
 
@@ -61,9 +69,11 @@ export class ApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.post('/my-hotels', { multipart: hotelData });
+        const response = await context.post('http://localhost:7000/api/my-hotels', { data: hotelData });
+        const status = response.status();
+        const body = await response.text(); // O response.json() si siempre es JSON
         await context.dispose();
-        return response;
+        return { status, body };
     }
 
     async updateHotel(authCookie: string, hotelId: string, hotelData: any) {

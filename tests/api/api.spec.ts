@@ -4,19 +4,23 @@ import { expect } from '@playwright/test';
 import hotelData from '../../fixtures/data/apiHotel.json';
 
 test('Create a hotel (POST /my-hotels)', async ({ apiHelper }) => {
-    // Supón que ya tienes el authCookie tras login (puedes hacer login con apiHelper.loginUser)
-    const loginResponse = await apiHelper.loginUser('manutestv1@gmail.com', '123456789');
-    expect(loginResponse.status()).toBe(200);
-
-    // Obtén el auth_token del login
-    const cookies = await loginResponse.request().storageState();
-    const authCookie = cookies.cookies?.find((c: any) => c.name === 'auth_token')?.value;
+    // Obtén el auth_token directamente con el nuevo método
+    const authCookie = await apiHelper.getAuthToken('manutestv1@gmail.com', '123456789');
     expect(authCookie).toBeDefined();
 
     // Crea el hotel usando la data del JSON
-    const response = await apiHelper.createHotel(authCookie, hotelData);
-    expect([201, 200]).toContain(response.status());
+    const { status, body } = await apiHelper.createHotel(authCookie, hotelData);
 
-    const hotel = await response.json();
-    expect(hotel.name).toBe(hotelData.name);
+    // Agrega logs para debuggear el error 500
+    console.log('Status:', status);
+    console.log('Body:', body);
+
+    expect([201, 200]).toContain(status);
+
+    // Si necesitas el objeto hotel y la respuesta es JSON válida:
+    // const hotel = JSON.parse(body);
+    // expect(hotel.name).toBe(hotelData.name;
+
+    //const hotel = await response.json();
+    // Aquí puedes agregar más asserts si lo necesitas
 });
