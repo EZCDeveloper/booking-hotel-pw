@@ -1,13 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import path from 'path';
+require('dotenv').config();
 
 // Refactor for for other environments
 dotenv.config({
   path: path.resolve(__dirname, `.env.staging`),
   override: true
 });
-
 
 export default defineConfig({
   testDir: './tests',

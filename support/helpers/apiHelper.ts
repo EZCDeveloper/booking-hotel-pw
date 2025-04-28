@@ -11,21 +11,11 @@ export class ApiHelper {
     }
 
     async loginUser(email: string, password: string) {
-        const response = await this.request.post('/auth/login', { data: { email, password } });
+        const response = await this.request.post('/api/auth/login', { data: { email, password } });
         return response;
     }
 
-    async getAuthToken(email: string, password: string): Promise<string | undefined> {
-        // Realiza el login usando el método existente
-        const response = await this.loginUser(email, password);
-        expect(response.ok()).toBeTruthy();
 
-        // Extrae las cookies de la respuesta de login
-        const cookies = await this.request.storageState();
-        const authCookie = cookies.cookies?.find((c: any) => c.name === 'auth_token')?.value;
-
-        return authCookie;
-    }
 
     async validateToken(authCookie: string) {
         const context = await request.newContext({

@@ -38,7 +38,7 @@ export const test = baseTest.extend<PageFixtures & ApiFixtures>({
 
     /*-- API --*/
     apiHelper: async ({ page }, use) => {
-        const apiContext = await request.newContext({ baseURL: process.env.BASE_URL_API, });
+        const apiContext = await request.newContext({ baseURL: process.env.BASE_URL_API });
         await use(new ApiHelper(apiContext));
         await apiContext.dispose();
     }
