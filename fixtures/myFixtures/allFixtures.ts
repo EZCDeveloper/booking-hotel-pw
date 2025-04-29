@@ -2,7 +2,7 @@ import { test as baseTest, request } from "@playwright/test";
 import { BasePage } from "../../support/pages/base.page";
 import { LoginPage } from "../../support/pages/login.page";
 import { CreateHotelPage } from "../../support/pages/hotel/createHotel.page";
-import { ApiHelper } from "../../support/helpers/apiHelper";
+import { UserApiHelper } from "../../support/helpers/userApiHelper";
 import { MyHotelsPage } from "../../support/pages/hotel/myHotels.page";
 
 
@@ -14,7 +14,7 @@ type PageFixtures = {
 }
 
 export type ApiFixtures = {
-    apiHelper: ApiHelper;
+    userApiHelper: UserApiHelper;
 }
 
 export const test = baseTest.extend<PageFixtures & ApiFixtures>({
@@ -37,9 +37,9 @@ export const test = baseTest.extend<PageFixtures & ApiFixtures>({
     },
 
     /*-- API --*/
-    apiHelper: async ({ page }, use) => {
+    userApiHelper: async ({ page }, use) => {
         const apiContext = await request.newContext({ baseURL: process.env.BASE_URL_API });
-        await use(new ApiHelper(apiContext));
+        await use(new UserApiHelper(apiContext));
         await apiContext.dispose();
     }
 });

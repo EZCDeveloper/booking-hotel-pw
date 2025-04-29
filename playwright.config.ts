@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import path from 'path';
-require('dotenv').config();
 
 // Refactor for for other environments
 dotenv.config({

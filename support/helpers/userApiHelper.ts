@@ -1,12 +1,12 @@
 // support/helpers/apiHelper.ts
 import { APIRequestContext, request, expect } from '@playwright/test';
 
-export class ApiHelper {
+export class UserApiHelper {
     constructor(private request: APIRequestContext) { }
 
     // --- USER METHODS ---
     async registerUser(userData: any) {
-        const response = await this.request.post('/users/register', { data: userData });
+        const response = await this.request.post('/api/users/register', { data: userData });
         return response;
     }
 

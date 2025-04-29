@@ -3,7 +3,6 @@ import { UserRoles, Users } from '../../support/auth/user-roles';
 import { expect } from '@playwright/test';
 import { HotelTestData } from '../../fixtures/data/test-data';
 import { TEST_COPY } from '../../fixtures/data/test-copy';
-import apiHotel from '../../fixtures/data/apiHotel.json';
 
 test.describe('TS01_Create Hotel', () => {
 
@@ -42,7 +41,7 @@ test.describe('TS01_Edit a Hotel', () => {
 
     test.use({ storageState: Users[UserRoles.ADMIN].authFile });
 
-    test('TC-001: Should Edit a Hotel', async ({ page, basePage, createHotelPage, myHotelsPage, apiHelper }) => {
+    test('TC-001: Should Edit a Hotel', async ({ page, basePage, createHotelPage, myHotelsPage }) => {
 
 
         // 1. Login and navigate to home page
