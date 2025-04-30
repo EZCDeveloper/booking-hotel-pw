@@ -3,7 +3,7 @@ import { expect } from '@playwright/test';
 import userTemplate from '../../fixtures/data/apiUser.json'
 
 
-test('TC-001: Register a new user', async ({ userApiHelper }) => {
+test('TC-001: Register a new user (POST /users/register)', async ({ userApiHelper }) => {
     // Generate unique email
     const uniqueEmail = `user_${Date.now()}@test.com`;
     // Build userData using the template and the generated email
@@ -24,10 +24,3 @@ test('TC-002: Login user (POST /auth/login)', async ({ userApiHelper }) => {
     );
     expect(response.status()).toBe(200);
 })
-
-// TODO: Create a hotel by API
-test('TC-003: Create a hotel (POST /my-hotels)', async ({ userApiHelper }) => {
-    const response = await userApiHelper.loginUser(
-        process.env.CUSTOMER_USERNAME as string, process.env.CUSTOMER_PASSWORD as string
-    );
-});
