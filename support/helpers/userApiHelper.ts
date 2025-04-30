@@ -21,7 +21,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.get('/auth/validate-token');
+        const response = await context.get('/api/auth/validate-token');
         await context.dispose();
         return response;
     }
@@ -30,19 +30,19 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.get('/users/me');
+        const response = await context.get('/api/users/me');
         await context.dispose();
         return response;
     }
 
     // --- HOTEL METHODS ---
     async searchHotels(destination: string) {
-        const response = await this.request.get(`/hotels/search?destination=${destination}`);
+        const response = await this.request.get(`/api/hotels/search?destination=${destination}`);
         return response;
     }
 
     async getAllHotels() {
-        const response = await this.request.get('/hotels');
+        const response = await this.request.get('/api/hotels');
         return response;
     }
 
@@ -50,7 +50,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.get('/my-hotels');
+        const response = await context.get('/api/my-hotels');
         await context.dispose();
         return response;
     }
@@ -59,7 +59,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.post('http://localhost:7000/api/my-hotels', { data: hotelData });
+        const response = await context.post('/api/my-hotels', { data: hotelData });
         const status = response.status();
         const body = await response.text(); // O response.json() si siempre es JSON
         await context.dispose();
@@ -70,7 +70,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.put(`/my-hotels/${hotelId}`, { multipart: hotelData });
+        const response = await context.put(`/api/my-hotels/${hotelId}`, { multipart: hotelData });
         await context.dispose();
         return response;
     }
@@ -79,7 +79,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.delete(`/my-hotels/${hotelId}`);
+        const response = await context.delete(`/api/my-hotels/${hotelId}`);
         await context.dispose();
         return response;
     }
@@ -88,7 +88,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.get('/my-bookings');
+        const response = await context.get('/api/my-bookings');
         await context.dispose();
         return response;
     }
@@ -97,7 +97,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.post(`/hotels/${hotelId}/bookings`, { data: bookingData });
+        const response = await context.post(`/api/hotels/${hotelId}/bookings`, { data: bookingData });
         await context.dispose();
         return response;
     }
@@ -106,7 +106,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.post('/bookings/create-payment-intent', { data: paymentData });
+        const response = await context.post('/api/bookings/create-payment-intent', { data: paymentData });
         await context.dispose();
         return response;
     }
@@ -115,7 +115,7 @@ export class UserApiHelper {
         const context = await request.newContext({
             extraHTTPHeaders: { Cookie: `auth_token=${authCookie}` }
         });
-        const response = await context.get(`/my-hotels/${hotelId}`);
+        const response = await context.get(`/api/my-hotels/${hotelId}`);
         await context.dispose();
         return response;
     }

@@ -3,6 +3,7 @@ import { UserRoles, Users } from '../../support/auth/user-roles';
 import { expect } from '@playwright/test';
 import { HotelTestData } from '../../fixtures/data/test-data';
 import { TEST_COPY } from '../../fixtures/data/test-copy';
+import { URL } from '../../fixtures/data/url-copy';
 
 test.describe('TS01_Create Hotel', () => {
 
@@ -26,7 +27,7 @@ test.describe('TS01_Create Hotel', () => {
             const hotelWithoutName = { ...HotelTestData.validHotel, name: '' };
 
             // 2. Fill the hotel form except for the name
-            await createHotelPage.navigateToMyHotels();
+            await createHotelPage.navigateTo(URL.MY_HOTELS);
             await createHotelPage.clickAddHotel();
             await createHotelPage.fillBasicHotelDetails(hotelWithoutName);
             await createHotelPage.saveHotel()
