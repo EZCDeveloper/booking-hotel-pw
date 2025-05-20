@@ -1,0 +1,31 @@
+{
+  "name": "booking-hotel-pw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EZCDeveloper/booking-hotel-pw.git"
+  },
+  "keywords": [],
+  "author": "Emanuel Zini Casaro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EZCDeveloper/booking-hotel-pw/issues"
+  },
+  "homepage": "https://github.com/EZCDeveloper/booking-hotel-pw#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.19"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "fsevents": "^2.3.2",
+    "playwright": "^1.52.0",
+    "playwright-core": "^1.52.0",
+    "undici-types": "^6.21.0"
+  }
+}
