@@ -8,3 +8,6 @@ node_modules/
 
 .env.staging
 .env.prod
+
+# Rules
+.windsurf
