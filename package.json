@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EZCDeveloper/booking-hotel-pw.git"
@@ -17,7 +19,8 @@
   "homepage": "https://github.com/EZCDeveloper/booking-hotel-pw#readme",
   "devDependencies": {
     "@playwright/test": "^1.52.0",
-    "@types/node": "^22.15.19"
+    "@types/node": "^22.15.19",
+    "typescript": "^5.4.5"
   },
   "directories": {
     "test": "tests"
