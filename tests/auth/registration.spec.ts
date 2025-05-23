@@ -12,7 +12,7 @@ test.describe('User Registration', () => {
     });
 
     test('TC-001: Successful User Registration', async ({ page }) => {
-        const uniqueEmail = generateRandomEmail();
+        const uniqueEmail = validUser.email;
 
         // --- Adjust locators below based on your application's actual HTML structure ---
         await page.getByLabel('First Name').fill(validUser.firstName);

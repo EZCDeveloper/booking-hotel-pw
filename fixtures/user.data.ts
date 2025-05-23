@@ -6,5 +6,6 @@ export const generateRandomEmail = (): string => {
 export const validUser = {
   firstName: 'TestUserFirst',
   lastName: 'TestUserLast',
+  email: 'testuserV5@example.com',
   password: 'ValidPassword123!',
 };
