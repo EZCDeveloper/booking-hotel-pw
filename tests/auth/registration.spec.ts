@@ -11,8 +11,8 @@ test.describe('User Registration', () => {
         await page.goto(registerPagePath);
     });
 
-    test('TC-001: Successful User Registration', async ({ page }) => {
-        const uniqueEmail = validUser.email;
+    test('TC-1.1.01: Successful User Registration (UI Flow)', async ({ page }) => {
+        const uniqueEmail = generateRandomEmail(); // Ensures truly unique email for this test
 
         // --- Adjust locators below based on your application's actual HTML structure ---
         await page.getByLabel('First Name').fill(validUser.firstName);
@@ -32,7 +32,7 @@ test.describe('User Registration', () => {
         await expect(page).toHaveURL(new RegExp(`^${homePagePath}$`), { timeout: 10000 });
     });
 
-    test('TC-007: User Registration - Attempt with Existing Email', async ({ page }) => {
+    test('TC-1.1.02: User Registration with Existing Email (UI Feedback)', async ({ page }) => {
         const existingEmail = generateRandomEmail();
 
         // First, register a user to ensure the email exists
@@ -64,6 +64,81 @@ test.describe('User Registration', () => {
         await expect(page.getByText('User already exists', { exact: true })).toBeVisible({ timeout: 10000 });
 
         // Ensure page hasn't redirected away from registration
+        await expect(page).toHaveURL(new RegExp(registerPagePath));
+    });
+
+    test('TC-1.1.03: User Registration with Invalid Input (UI Validations)', async ({ page }) => {
+        const { firstName, lastName, password } = validUser;
+
+        // Scenario 1: Missing First Name
+        await page.getByLabel('Last Name').fill(lastName);
+        await page.getByLabel('Email').fill(generateRandomEmail());
+        await page.getByLabel('Password', { exact: true }).fill(password);
+        await page.getByLabel('Confirm Password').fill(password);
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.getByText('First Name is required')).toBeVisible({ timeout: 5000 });
+        await expect(page).toHaveURL(new RegExp(registerPagePath));
+        await page.goto(registerPagePath); // Reset for next scenario
+
+        // Scenario 2: Missing Last Name
+        await page.getByLabel('First Name').fill(firstName);
+        await page.getByLabel('Email').fill(generateRandomEmail());
+        await page.getByLabel('Password', { exact: true }).fill(password);
+        await page.getByLabel('Confirm Password').fill(password);
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.getByText('Last Name is required')).toBeVisible({ timeout: 5000 });
+        await expect(page).toHaveURL(new RegExp(registerPagePath));
+        await page.goto(registerPagePath);
+
+        // Scenario 3: Missing Email
+        await page.getByLabel('First Name').fill(firstName);
+        await page.getByLabel('Last Name').fill(lastName);
+        await page.getByLabel('Password', { exact: true }).fill(password);
+        await page.getByLabel('Confirm Password').fill(password);
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.getByText('Email is required')).toBeVisible({ timeout: 5000 });
+        await expect(page).toHaveURL(new RegExp(registerPagePath));
+        await page.goto(registerPagePath);
+
+        // Scenario 4: Missing Password
+        await page.getByLabel('First Name').fill(firstName);
+        await page.getByLabel('Last Name').fill(lastName);
+        await page.getByLabel('Email').fill(generateRandomEmail());
+        await page.getByLabel('Confirm Password').fill(password);
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.getByText('Password is required')).toBeVisible({ timeout: 5000 });
+        await expect(page).toHaveURL(new RegExp(registerPagePath));
+        await page.goto(registerPagePath);
+
+        // Scenario 5: Missing Confirm Password
+        await page.getByLabel('First Name').fill(firstName);
+        await page.getByLabel('Last Name').fill(lastName);
+        await page.getByLabel('Email').fill(generateRandomEmail());
+        await page.getByLabel('Password', { exact: true }).fill(password);
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.getByText('Confirm Password is required')).toBeVisible({ timeout: 5000 });
+        await expect(page).toHaveURL(new RegExp(registerPagePath));
+        await page.goto(registerPagePath);
+
+        // Scenario 6: Invalid Email Format
+        await page.getByLabel('First Name').fill(firstName);
+        await page.getByLabel('Last Name').fill(lastName);
+        await page.getByLabel('Email').fill('invalidemailformat');
+        await page.getByLabel('Password', { exact: true }).fill(password);
+        await page.getByLabel('Confirm Password').fill(password);
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.getByText('Email is invalid')).toBeVisible({ timeout: 5000 });
+        await expect(page).toHaveURL(new RegExp(registerPagePath));
+        await page.goto(registerPagePath);
+
+        // Scenario 7: Mismatched Passwords
+        await page.getByLabel('First Name').fill(firstName);
+        await page.getByLabel('Last Name').fill(lastName);
+        await page.getByLabel('Email').fill(generateRandomEmail());
+        await page.getByLabel('Password', { exact: true }).fill(password);
+        await page.getByLabel('Confirm Password').fill('differentpassword');
+        await page.getByRole('button', { name: 'Create Account' }).click();
+        await expect(page.getByText('Passwords do not match')).toBeVisible({ timeout: 5000 });
         await expect(page).toHaveURL(new RegExp(registerPagePath));
     });
 });
