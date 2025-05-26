@@ -13,6 +13,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a new user can successfully register an account via the UI, providing all valid and required information.
 - **Priority:** Critical
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:**
     - User is not registered with the provided email.
     - Application registration page is accessible.
@@ -31,6 +32,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that the UI provides appropriate feedback when a user attempts to register with an email that already exists.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:**
     - An account with 'existing@example.com' email already exists.
     - Application registration page is accessible.
@@ -48,6 +50,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify UI validation messages for invalid inputs during registration (e.g., mismatched passwords, invalid email format, missing required fields).
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** Application registration page is accessible.
 - **Steps:** (Test various invalid inputs, e.g.)
     1. Navigate to the registration page.
@@ -65,6 +68,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a registered user can successfully log in with valid credentials via the UI.
 - **Priority:** Critical
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:**
     - User 'testuser@example.com' with password 'password123' is registered and active.
     - Application login page is accessible.
@@ -83,6 +87,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that the UI provides appropriate feedback for login attempts with invalid credentials.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** Application login page is accessible.
 - **Steps:**
     1. Navigate to the login page.
@@ -99,6 +104,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a logged-in user can successfully log out from the application via the UI.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is logged in.
 - **Steps:**
     1. Click on the "Logout" button/link.
@@ -118,6 +124,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a logged-in Hotel Owner/Admin can successfully add a new hotel with all required details and image uploads via the UI.
 - **Priority:** Critical
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is logged in as a Hotel Owner/Admin.
 - **Steps:** (Detailed steps for filling the 'Add Hotel' form)
 - **Expected Results:** Hotel is added, success message, hotel appears in "My Hotels" list.
@@ -127,6 +134,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify UI validation when attempting to add a new hotel with missing required fields.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is logged in as a Hotel Owner/Admin, on the 'Add Hotel' page.
 - **Steps:** Attempt to submit the form with one or more required fields empty.
 - **Expected Results:** Validation errors displayed for missing fields, form not submitted.
@@ -138,6 +146,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a Hotel Owner/Admin can successfully edit the details of an existing owned hotel via the UI.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is logged in as a Hotel Owner/Admin and has at least one hotel listed.
 - **Steps:** (Detailed steps for navigating to edit, modifying, and saving)
 - **Expected Results:** Hotel details are updated, success message, updated details reflected.
@@ -149,6 +158,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a Hotel Owner/Admin can view a list of their own hotels.
 - **Priority:** Medium
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is logged in as a Hotel Owner/Admin.
 - **Steps:** Navigate to the "My Hotels" section.
 - **Expected Results:** A list/grid of hotels owned by the user is displayed with key information.
@@ -164,6 +174,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that users can search for hotels based on a destination via the UI.
 - **Priority:** Critical
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** Hotels exist for the searched destination.
 - **Steps:** Enter a destination in the search bar, click search.
 - **Expected Results:** List of hotels matching the destination is displayed.
@@ -173,6 +184,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify hotel search functionality with various filters (e.g., date range, number of adults/children, price range, star rating, facilities) via the UI.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** Hotels exist that match filter criteria.
 - **Steps:** Perform a search and apply various available filters.
 - **Expected Results:** Search results are updated according to the applied filters.
@@ -182,6 +194,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify UI feedback when a hotel search yields no results.
 - **Priority:** Medium
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Steps:** Perform a search with criteria that are unlikely to match any hotels.
 - **Expected Results:** A message indicating "No hotels found" or similar is displayed.
 
@@ -192,6 +205,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that users can click on a hotel from search results to view its detailed information page via the UI.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** Hotel search results are displayed.
 - **Steps:** Click on a hotel listing from the search results.
 - **Expected Results:** User is navigated to the hotel details page showing comprehensive information (description, images, facilities, map, price, reviews).
@@ -207,6 +221,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a logged-in user can successfully book a hotel, including completing a payment process, via the UI.
 - **Priority:** Critical
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is logged in, has selected a hotel and dates.
 - **Steps:** (Detailed steps for the booking and payment flow)
 - **Expected Results:** Booking is confirmed, success message, booking appears in "My Bookings".
@@ -216,6 +231,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that if a guest user attempts to book a hotel, they are prompted to log in or register.
 - **Priority:** Medium
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is not logged in.
 - **Steps:** Select a hotel and attempt to proceed to booking.
 - **Expected Results:** User is redirected to the login page or shown a login/register prompt.
@@ -227,6 +243,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that a logged-in user can view their list of past and upcoming bookings via the UI.
 - **Priority:** High
 - **Type:** E2E / UI
+- **Status:** Pending
 - **Preconditions:** User is logged in and has made bookings.
 - **Steps:** Navigate to the "My Bookings" section.
 - **Expected Results:** A list of user's bookings is displayed with relevant details.
@@ -242,6 +259,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify successful user registration via the `/api/users/register` endpoint.
 - **Priority:** Critical
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/users/register`
 - **Request Body:** `{ "firstName": "ApiTest", "lastName": "User", "email": "api.unique.user@example.com", "password": "password123" }`
 - **Expected Response:** Status 200/201, JSON body with success message, user details (excluding password), and authentication token in cookie/body.
@@ -251,6 +269,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify API returns a 400 error for registration with an existing email.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/users/register`
 - **Request Body:** `{ "firstName": "ApiTest", "lastName": "User", "email": "existing.user@example.com", "password": "password123" }` (assuming 'existing.user@example.com' is already registered)
 - **Expected Response:** Status 400, JSON body `{ "message": "User already exists" }`.
@@ -260,6 +279,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify API returns a 400 error with validation messages for invalid registration data (e.g., missing fields, invalid email format).
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/users/register`
 - **Request Body Examples:**
     - Missing `firstName`: `{ "lastName": "User", "email": "invalid.data@example.com", "password": "password123" }`
@@ -271,6 +291,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify successful user login via the `/api/auth/login` endpoint and token issuance.
 - **Priority:** Critical
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/auth/login`
 - **Request Body:** `{ "email": "registered.user@example.com", "password": "password123" }`
 - **Expected Response:** Status 200, JSON body with success message/userId, `auth_token` cookie set.
@@ -280,6 +301,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify API returns a 400/401 error for login attempts with incorrect credentials.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/auth/login`
 - **Request Body:** `{ "email": "registered.user@example.com", "password": "wrongpassword" }`
 - **Expected Response:** Status 400/401, JSON body with error message (e.g., "Invalid Credentials").
@@ -289,6 +311,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify the `/api/auth/validate-token` endpoint correctly validates an active session token.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `GET /api/auth/validate-token`
 - **Preconditions:** A valid `auth_token` cookie from a logged-in session is sent with the request.
 - **Expected Response:** Status 200, JSON body with `userId`.
@@ -298,6 +321,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify the `/api/auth/logout` endpoint successfully logs out the user and clears the token.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/auth/logout`
 - **Preconditions:** A valid `auth_token` cookie from a logged-in session is sent.
 - **Expected Response:** Status 200, JSON body with success message, `auth_token` cookie is cleared/expired.
@@ -309,6 +333,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify successful hotel creation via `POST /api/my-hotels` by an authenticated owner.
 - **Priority:** Critical
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/my-hotels`
 - **Preconditions:** User is authenticated as a hotel owner.
 - **Request Body:** (Valid hotel data as multipart/form-data including images)
@@ -319,6 +344,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify retrieval of hotels for an authenticated owner via `GET /api/my-hotels`.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `GET /api/my-hotels`
 - **Preconditions:** User is authenticated as a hotel owner.
 - **Expected Response:** Status 200, JSON array of hotels owned by the user.
@@ -328,6 +354,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify retrieval of a specific hotel by ID owned by the authenticated user via `GET /api/my-hotels/:id`.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `GET /api/my-hotels/:hotelId` (replace `:hotelId` with an actual ID owned by the user)
 - **Preconditions:** User is authenticated as a hotel owner.
 - **Expected Response:** Status 200, JSON body of the specific hotel.
@@ -337,6 +364,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify successful update of an owned hotel via `PUT /api/my-hotels/:id` by an authenticated owner.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `PUT /api/my-hotels/:hotelId` (replace `:hotelId`)
 - **Preconditions:** User is authenticated as a hotel owner.
 - **Request Body:** (Updated hotel data as multipart/form-data or JSON)
@@ -349,6 +377,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify hotel search functionality via `GET /api/hotels/search` with various query parameters (destination, dates, counts, filters).
 - **Priority:** Critical
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `GET /api/hotels/search`
 - **Query Parameters Examples:** `?destination=Paris`, `?adultCount=2&childCount=1`, `?facilities=freeWifi&sortOption=starRating`
 - **Expected Response:** Status 200, JSON body with search results (hotels array, pagination info).
@@ -358,6 +387,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify retrieval of all available hotels via `GET /api/hotels` (supports pagination, sorting).
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `GET /api/hotels`
 - **Query Parameters Examples:** `?page=2`, `?sortOption=pricePerNightAsc`
 - **Expected Response:** Status 200, JSON body with a list of hotels and pagination details.
@@ -367,6 +397,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify retrieval of detailed information for a specific hotel by ID via `GET /api/hotels/:id`.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `GET /api/hotels/:hotelId` (replace `:hotelId` with an actual public hotel ID)
 - **Expected Response:** Status 200, JSON body of the hotel details.
 
@@ -377,6 +408,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify successful creation of a Stripe payment intent for a hotel booking via `POST /api/hotels/:hotelId/bookings/payment-intent`.
 - **Priority:** Critical
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/hotels/:hotelId/bookings/payment-intent`
 - **Preconditions:** User is authenticated.
 - **Request Body:** `{ "numberOfNights": 3 }` (example)
@@ -387,6 +419,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify successful creation of a new booking after a payment intent via `POST /api/hotels/:hotelId/bookings`.
 - **Priority:** Critical
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `POST /api/hotels/:hotelId/bookings`
 - **Preconditions:** User is authenticated, valid `paymentIntentId` obtained.
 - **Request Body:** (Details of the booking, including `paymentIntentId`)
@@ -397,6 +430,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify retrieval of bookings for the authenticated user via `GET /api/my-bookings`.
 - **Priority:** High
 - **Type:** API
+- **Status:** Pending
 - **Endpoint:** `GET /api/my-bookings`
 - **Preconditions:** User is authenticated.
 - **Expected Response:** Status 200, JSON array of the user's bookings.
@@ -408,6 +442,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that attempting to access a protected owner/admin endpoint (e.g., `POST /api/my-hotels`) without an authentication token returns a 401 Unauthorized error.
 - **Priority:** Critical
 - **Type:** API / Security
+- **Status:** Pending
 - **Endpoint:** Example: `POST /api/my-hotels`
 - **Preconditions:** No `auth_token` cookie or Authorization header sent.
 - **Expected Response:** Status 401.
@@ -417,6 +452,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that attempting to access a protected owner/admin endpoint with an invalid or expired token returns a 401 Unauthorized error.
 - **Priority:** Critical
 - **Type:** API / Security
+- **Status:** Pending
 - **Endpoint:** Example: `POST /api/my-hotels`
 - **Preconditions:** An invalid/expired `auth_token` is sent.
 - **Expected Response:** Status 401.
@@ -426,6 +462,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that User A cannot access/modify resources owned by User B (e.g., User A tries to edit/view details of a hotel owned by User B via `PUT /api/my-hotels/:hotelIdOfUserB`).
 - **Priority:** High
 - **Type:** API / Security
+- **Status:** Pending
 - **Preconditions:** User A is authenticated. `:hotelIdOfUserB` belongs to User B.
 - **Expected Response:** Status 403 (Forbidden) or 404 (Not Found).
 
@@ -434,6 +471,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
 - **Description:** Verify that API endpoints properly validate and sanitize inputs to prevent common vulnerabilities like SQL Injection or XSS (e.g., sending malicious strings in search parameters or form data).
 - **Priority:** Critical
 - **Type:** API / Security
+- **Status:** Pending
 - **Endpoints:** Various, especially those accepting user-generated string inputs.
 - **Request Body/Query Params:** Include payloads designed to test for vulnerabilities (e.g., `' OR '1'='1`, `<script>alert('XSS')</script>`).
 - **Expected Response:** Input is rejected (e.g., 400 Bad Request), or sanitized and does not cause unintended behavior/errors. No XSS execution or SQL errors.
