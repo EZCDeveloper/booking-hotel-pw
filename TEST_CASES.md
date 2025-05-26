@@ -1,451 +1,417 @@
 # ✨ Test Cases for MERN Booking App ✨
 
-This document outlines test cases for the MERN Booking App, covering UI and API testing scenarios based on the application's features and technical specifications.
+This document outlines test cases for the MERN Booking App, covering UI, API, and other testing scenarios based on the application's features and technical specifications. Test cases are grouped into logical suites.
 
-## Critical Priority Test Cases
+## 1. Authentication Suite (UI/E2E Focus)
+*This suite focuses on user identity management through the User Interface: registration, login, logout.*
 
-### TC-001
-- **Title:** Successful User Registration
-- **Description:** Verify that a new user can successfully register an account. (Approach: Hybrid - UI for form interaction and initial validation, API for direct endpoint testing and comprehensive validation of backend logic and data persistence.)
+### 1.1 User Registration (UI)
+
+#### TC-001. Successful User Registration (UI Flow)
+- **Description:** Verify that a new user can successfully register an account via the UI, providing all valid and required information.
 - **Priority:** Critical
+- **Type:** E2E / UI
 - **Preconditions:**
     - User is not registered with the provided email.
     - Application registration page is accessible.
 - **Steps:**
-    1.  **UI:** Navigate to the registration page.
-    2.  **UI:** Fill in all required fields (First Name, Last Name, Email, Password, Confirm Password) with valid, unique data.
-    3.  **UI:** Submit the registration form.
-    4.  **UI:** Observe a success message and redirection (e.g., to login page or dashboard).
-    5.  **UI:** Check if an `auth_token` cookie is set (if auto-login occurs).
-    6.  **API (POST /api/users/register):**
-        a. Send a POST request to `/api/users/register` with a valid and unique user registration payload (firstName, lastName, email, password).
-        b. Verify the HTTP status code is 200 or 201.
-        c. Verify the response body contains a success message and/or user details (excluding sensitive info like password).
-        d. Verify an `auth_token` HTTP-only cookie is set in the response headers.
-        e. Verify that a new user record is created in the MongoDB database with correctly hashed password.
-- **Test Data:**
-    - First Name: TestUserFirst
-    - Last Name: TestUserLast
-    - Email: `testuser_` + `timestamp()` + `@example.com`
-    - Password: `ValidPassword123!`
-    - Confirm Password: `ValidPassword123!`
-- **Expected Result:**
-    - **UI:** User is successfully registered. A confirmation message is displayed. User is redirected as expected. `auth_token` cookie might be set.
-    - **API:** API returns a success status (200/201). Response body is as expected. `auth_token` cookie is set. New user record exists in DB with hashed password.
+    1. Navigate to the registration page.
+    2. Fill in First Name, Last Name, Email, Password, Confirm Password fields with valid data.
+    3. Click the "Create Account" button.
+- **Expected Results:**
+    - User is redirected to the homepage or a confirmation page.
+    - A success message is displayed (e.g., "Registration successful!").
+    - An authentication token is stored (e.g., in cookies or local storage).
+    - User data is correctly persisted in the database.
 
-### TC-002
-- **Title:** Successful User Login
-- **Description:** Verify that a registered user can successfully log in with valid credentials. (Approach: Hybrid - UI for form interaction, API for direct endpoint testing.)
-- **Priority:** Critical
+#### TC-002. User Registration with Existing Email (UI Feedback)
+- **Description:** Verify that the UI provides appropriate feedback when a user attempts to register with an email that already exists.
+- **Priority:** High
+- **Type:** E2E / UI
 - **Preconditions:**
-    - User is registered and their account is active.
+    - An account with 'existing@example.com' email already exists.
+    - Application registration page is accessible.
+- **Steps:**
+    1. Navigate to the registration page.
+    2. Fill in registration form with an email that is already registered (e.g., 'existing@example.com') and other valid data.
+    3. Click the "Create Account" button.
+- **Expected Results:**
+    - An error message is displayed on the UI (e.g., "User already exists" or "Email is already in use").
+    - User remains on the registration page.
+    - No new user account is created.
+
+#### TC-003. User Registration with Invalid Input (UI Validations)
+- **Description:** Verify UI validation messages for invalid inputs during registration (e.g., mismatched passwords, invalid email format, missing required fields).
+- **Priority:** High
+- **Type:** E2E / UI
+- **Preconditions:** Application registration page is accessible.
+- **Steps:** (Test various invalid inputs, e.g.)
+    1. Navigate to the registration page.
+    2. Attempt to submit with a missing required field (e.g., Last Name).
+    3. Attempt to submit with an invalid email format.
+    4. Attempt to submit with passwords that do not match.
+- **Expected Results:**
+    - Specific error messages are displayed below the respective invalid fields.
+    - Form submission is prevented.
+
+### 1.2 User Login (UI)
+
+#### TC-004. Successful User Login (UI Flow)
+- **Description:** Verify that a registered user can successfully log in with valid credentials via the UI.
+- **Priority:** Critical
+- **Type:** E2E / UI
+- **Preconditions:**
+    - User 'testuser@example.com' with password 'password123' is registered and active.
     - Application login page is accessible.
 - **Steps:**
-    1.  **UI:** Navigate to the login page.
-    2.  **UI:** Enter valid registered email and password.
-    3.  **UI:** Submit the login form.
-    4.  **UI:** Observe successful login, redirection to the user dashboard or home page, and display of authenticated user elements (e.g., "My Bookings", "Sign Out").
-    5.  **UI:** Verify the `auth_token` HTTP-only cookie is set in the browser.
-    6.  **API (POST /api/auth/login):**
-        a. Send a POST request to `/api/auth/login` with valid registered user credentials (email, password).
-        b. Verify the HTTP status code is 200.
-        c. Verify the response body contains user details (e.g., userId) and/or a success message.
-        d. Verify an `auth_token` HTTP-only cookie is set in the response headers.
-- **Test Data:**
-    - Email: (Email of a pre-registered, active user)
-    - Password: (Password of the pre-registered user)
-- **Expected Result:**
-    - **UI:** User is successfully logged in and redirected. Authenticated user elements are visible. `auth_token` cookie is set.
-    - **API:** API returns a 200 status. Response body is as expected. `auth_token` cookie is set.
+    1. Navigate to the login page.
+    2. Enter valid email ('testuser@example.com') and password ('password123').
+    3. Click the "Login" button.
+- **Expected Results:**
+    - User is redirected to the homepage or dashboard.
+    - A success message is displayed (e.g., "Login Successful!").
+    - An authentication token is stored.
+    - UI reflects logged-in state (e.g., shows user name, logout button).
 
-### TC-003
-- **Title:** Hotel Search by Destination (Basic)
-- **Description:** Verify that users (guest or registered) can search for hotels based on a destination. (Approach: Hybrid - UI for search interaction, API for result validation.)
-- **Priority:** Critical
-- **Preconditions:**
-    - Hotels exist in the database for various destinations.
-    - Application search interface is accessible.
-- **Steps:**
-    1.  **UI:** Navigate to the hotel search page (e.g., homepage).
-    2.  **UI:** Enter a valid destination in the search input field.
-    3.  **UI:** Optionally, select check-in/check-out dates and number of guests.
-    4.  **UI:** Click the "Search" button.
-    5.  **UI:** Observe that a list of hotels matching the destination is displayed. Each listing should show basic info (name, price, rating).
-    6.  **API (GET /api/hotels/search):**
-        a. Send a GET request to `/api/hotels/search` with a `destination` query parameter (e.g., `/api/hotels/search?destination=Bariloche`).
-        b. Verify the HTTP status code is 200.
-        c. Verify the response body is a JSON array of hotel objects matching the destination.
-        d. Verify each hotel object contains key fields like `_id`, `name`, `city`, `country`, `pricePerNight`, `starRating`.
-- **Test Data:**
-    - Destination: (A city known to have multiple hotels, e.g., "Bariloche")
-    - Optional: Check-in Date (future), Check-out Date (after check-in), Adults: 2
-- **Expected Result:**
-    - **UI:** A list of relevant hotels is displayed. If no hotels match, a "no results found" message is shown. Pagination might be present.
-    - **API:** API returns a 200 status with a list of hotel objects matching the search criteria. The list can be empty if no matches.
-
-### TC-004
-- **Title:** View Hotel Details
-- **Description:** Verify that users can view detailed information about a specific hotel. (Approach: Hybrid - UI for navigation, API for data accuracy.)
-- **Priority:** Critical
-- **Preconditions:**
-    - User has a valid Hotel ID or can navigate from search results.
-    - The hotel with the given ID exists.
-- **Steps:**
-    1.  **UI:** From the search results page, click on a hotel to view its details. (Alternatively, navigate directly via URL if structure is known: e.g., `/detail/{hotelId}`).
-    2.  **UI:** Observe that the hotel details page loads, displaying comprehensive information (name, description, images, facilities, price per night, room types if applicable, map, reviews if any).
-    3.  **API (GET /api/hotels/:id):**
-        a. Send a GET request to `/api/hotels/{hotelId}` where `{hotelId}` is a valid ID of an existing hotel.
-        b. Verify the HTTP status code is 200.
-        c. Verify the response body is a JSON object containing detailed hotel information (name, description, facilities, images, pricePerNight, starRating, etc.).
-        d. Compare key details from API response with UI display for consistency.
-- **Test Data:**
-    - Hotel ID: (A valid ID of an existing hotel)
-- **Expected Result:**
-    - **UI:** Hotel details page displays all relevant information accurately and comprehensively. Booking options are visible.
-    - **API:** API returns a 200 status with the full details of the specified hotel, matching the database record.
-
-### TC-005
-- **Title:** Create Hotel Booking (Registered User, Successful Payment via Stripe)
-- **Description:** Verify that a logged-in user can successfully book a hotel, including completing a Stripe payment. (Approach: Hybrid - UI for the end-to-end flow, API for payment intent and booking confirmation steps.)
-- **Priority:** Critical
-- **Preconditions:**
-    - User is logged in.
-    - User has selected a hotel and a valid date range with availability.
-    - Valid Stripe test payment details are available.
-- **Steps:**
-    1.  **UI:** Navigate to the details page of the desired hotel.
-    2.  **UI:** Select valid check-in/check-out dates, number of guests.
-    3.  **UI:** Click the "Book Now" or "Reserve" button.
-    4.  **API (POST /api/hotels/:hotelId/bookings/payment-intent):**
-        a. (Triggered by UI) Verify a POST request is made to create a Stripe payment intent. Request body should include `numberOfNights`.
-        b. Verify the HTTP status code is 200.
-        c. Verify the response body contains `paymentIntentId` and `clientSecret` from Stripe, and `totalCost`.
-    5.  **UI:** User is presented with the Stripe payment form, prefilled with amount.
-    6.  **UI:** Enter valid Stripe test card details.
-    7.  **UI:** Submit the payment via Stripe element.
-    8.  **API (POST /api/hotels/:hotelId/bookings):**
-        a. (Triggered by UI after successful Stripe client-side confirmation) Verify a POST request is made to finalize the booking. Request body must include `paymentIntentId`.
-        b. Verify the HTTP status code is 200 or 201.
-        c. Verify the response body contains the confirmed booking details.
-        d. Verify the booking is recorded in the database for the user and hotel, including `paymentIntentId` and `totalCost`.
-    9.  **UI:** User sees a booking confirmation page/message.
-    10. **UI:** Navigate to "My Bookings" and verify the new booking is listed.
-- **Test Data:**
-    - Logged-in User: (Credentials of a registered user)
-    - Hotel ID: (Valid hotel ID with availability)
-    - Check-in/Check-out Dates: (Valid future dates with availability)
-    - Number of Guests: (e.g., 2 adults)
-    - Stripe Test Card: (e.g., `pm_card_visa` or 4242... series for success)
-- **Expected Result:**
-    - **UI:** User successfully completes the booking, sees a confirmation, and the booking appears in "My Bookings".
-    - **API:** Payment intent is created successfully. Booking is confirmed with a 200/201 status, booking details are returned, and the booking is stored in the database. Hotel availability might be updated (if tracked).
-
-### TC-006
-- **Title:** Add New Hotel (Hotel Owner/Admin)
-- **Description:** Verify that a logged-in Hotel Owner/Admin can successfully add a new hotel with all required details and image uploads. (Approach: Hybrid - UI for form interaction and file upload, API for `multipart/form-data` request validation.)
-- **Priority:** Critical
-- **Preconditions:**
-    - User is logged in with Hotel Owner/Admin privileges.
-    - User is on the "Add Hotel" page (e.g., via "My Hotels").
-    - Valid image files (e.g., JPG, PNG) are available for upload.
-- **Steps:**
-    1.  **UI:** Navigate to the "Add Hotel" form.
-    2.  **UI:** Fill in all required hotel details (name, city, country, description, type, pricePerNight, starRating, facilities, adultCount, childCount).
-    3.  **UI:** Upload one or more valid hotel images using the file input.
-    4.  **UI:** Submit the "Add Hotel" form.
-    5.  **API (POST /api/my-hotels):**
-        a. (Triggered by UI) Verify a POST request is made to `/api/my-hotels` with `Content-Type: multipart/form-data`.
-        b. Verify the request payload contains all form fields and `imageFiles`.
-        c. Verify the HTTP status code is 201 (Created).
-        d. Verify the response body contains the details of the newly created hotel, including Cloudinary image URLs.
-        e. Verify the new hotel record is created in the database, associated with the logged-in user.
-        f. Verify images are uploaded to Cloudinary.
-    6.  **UI:** Observe a success message and redirection (e.g., to "My Hotels" list or the new hotel's detail page).
-    7.  **UI:** Verify the newly added hotel is listed in "My Hotels".
-- **Test Data:**
-    - Hotel Name: `Test Hotel ` + `timestamp()`
-    - City: TestCity, Country: TestCountry
-    - Description: A nice test hotel.
-    - Type: Budget, Facilities: ["WiFi", "Parking"], Star Rating: 3
-    - Price Per Night: 50, Adult Count: 2, Child Count: 1
-    - Image Files: 1-5 valid image files (e.g., .jpg, .png)
-- **Expected Result:**
-    - **UI:** Hotel is successfully added. User is redirected. New hotel appears in "My Hotels" with correct details and images.
-    - **API:** API returns 201. New hotel record created in DB. Images uploaded to Cloudinary and URLs stored.
-
-## High Priority Test Cases
-
-### TC-007
-- **Title:** User Registration - Attempt with Existing Email
-- **Description:** Verify system prevents registration with an email that already exists. (Approach: Hybrid - UI for error display, API for error response.)
+#### TC-005. User Login with Invalid Credentials (UI Feedback)
+- **Description:** Verify that the UI provides appropriate feedback for login attempts with invalid credentials.
 - **Priority:** High
-- **Preconditions:**
-    - An email address is already registered in the system.
+- **Type:** E2E / UI
+- **Preconditions:** Application login page is accessible.
 - **Steps:**
-    1.  **UI:** Navigate to registration page.
-    2.  **UI:** Fill form using an existing email. Other fields valid.
-    3.  **UI:** Submit form. Observe error message (e.g., "Email already exists").
-    4.  **API (POST /api/users/register):**
-        a. Send POST request to `/api/users/register` with an existing email.
-        b. Verify HTTP status code is 400 or 409 (Conflict).
-        c. Verify response body contains an error message about email duplication.
-- **Test Data:**
-    - Email: (Email of a pre-registered user)
-    - Other fields: Valid data.
-- **Expected Result:**
-    - **UI:** Registration fails. Appropriate error message displayed. No new user created.
-    - **API:** Returns error status (400/409) with specific error message. No new user in DB.
+    1. Navigate to the login page.
+    2. Enter an invalid email or password.
+    3. Click the "Login" button.
+- **Expected Results:**
+    - An error message is displayed (e.g., "Invalid credentials" or "Email or password incorrect").
+    - User remains on the login page.
 
-### TC-008
-- **Title:** User Login - Attempt with Invalid Credentials
-- **Description:** Verify login fails with incorrect email or password. (Approach: Hybrid - UI for error display, API for error response.)
+### 1.3 User Logout (UI)
+
+#### TC-006. Successful User Logout (UI Flow)
+- **Description:** Verify that a logged-in user can successfully log out from the application via the UI.
 - **Priority:** High
-- **Preconditions:**
-    - User account exists.
-- **Steps:**
-    1.  **UI:** Navigate to login page.
-    2.  **UI:** Enter registered email but incorrect password (or vice-versa).
-    3.  **UI:** Submit form. Observe error message (e.g., "Invalid credentials").
-    4.  **API (POST /api/auth/login):**
-        a. Send POST request to `/api/auth/login` with invalid credentials.
-        b. Verify HTTP status code is 400 or 401 (Unauthorized).
-        c. Verify response body contains an error message about invalid credentials.
-- **Test Data:**
-    - Email: (Email of a pre-registered user)
-    - Password: `IncorrectPassword123`
-- **Expected Result:**
-    - **UI:** Login fails. Appropriate error message displayed. No `auth_token` set.
-    - **API:** Returns error status (400/401) with specific error message. No `auth_token` set.
-
-### TC-009
-- **Title:** Hotel Search with Multiple Filters and Sorting
-- **Description:** Verify users can search hotels using various filters (facilities, type, stars, price) and sort results. (Approach: Hybrid - UI for filter/sort selection, API for result validation.)
-- **Priority:** High
-- **Preconditions:**
-    - Hotels with diverse attributes exist.
-- **Steps:**
-    1.  **UI:** Navigate to search page.
-    2.  **UI:** Enter destination. Apply multiple filters (e.g., 5-star, "WiFi", max price $200).
-    3.  **UI:** Select a sort option (e.g., "Price: Low to High").
-    4.  **UI:** Observe updated hotel list matching all criteria and sorted correctly.
-    5.  **API (GET /api/hotels/search):**
-        a. Send GET request to `/api/hotels/search` with query parameters for destination, facilities, types, stars, maxPrice, sortOption, page.
-        b. Verify HTTP status code is 200.
-        c. Verify response hotels match all filters and are sorted as specified.
-- **Test Data:**
-    - Destination: (City with diverse hotels)
-    - Filters: stars=5, facilities=WiFi, maxPrice=200
-    - SortOption: pricePerNightAsc
-- **Expected Result:**
-    - **UI:** Hotel list updates correctly. Results match filters and sorting.
-    - **API:** Returns 200. Hotel list matches all criteria and sorting.
-
-### TC-010
-- **Title:** View "My Bookings" (Registered User)
-- **Description:** Verify a logged-in user can view their bookings. (Approach: Hybrid - UI for display, API for data retrieval and auth.)
-- **Priority:** High
-- **Preconditions:**
-    - User is logged in and has existing bookings.
-- **Steps:**
-    1.  **UI:** Log in. Navigate to "My Bookings" page.
-    2.  **UI:** Observe list of user's bookings with key details (hotel name, dates, price).
-    3.  **API (GET /api/my-bookings):**
-        a. Send GET request to `/api/my-bookings` (with `auth_token` cookie).
-        b. Verify HTTP status code is 200.
-        c. Verify response is a JSON array of bookings belonging to the user.
-- **Test Data:**
-    - Logged-in User: (User with previous bookings)
-- **Expected Result:**
-    - **UI:** "My Bookings" page displays user's bookings accurately.
-    - **API:** Returns 200 with list of user's bookings. Empty list if no bookings.
-
-### TC-011
-- **Title:** Edit Existing Hotel (Hotel Owner/Admin)
-- **Description:** Verify a Hotel Owner/Admin can edit their hotel's details, including updating images. (Approach: Hybrid - UI for form interaction, API for `multipart/form-data` and data update.)
-- **Priority:** High
-- **Preconditions:**
-    - User is logged in as Hotel Owner/Admin.
-    - User owns at least one hotel.
-    - Valid image files for update are available.
-- **Steps:**
-    1.  **UI:** Navigate to "My Hotels". Select a hotel and click "Edit".
-    2.  **UI:** Modify some details (e.g., description, price).
-    3.  **UI:** Optionally, upload new images or mark existing ones for deletion (if supported).
-    4.  **UI:** Submit the edit form.
-    5.  **API (PUT /api/my-hotels/:id):**
-        a. (Triggered by UI) Verify PUT request to `/api/my-hotels/{hotelId}` with `Content-Type: multipart/form-data`.
-        b. Payload includes updated fields, `imageUrls` (for existing images to keep), and potentially new `imageFiles`.
-        c. Verify HTTP status code is 200 or 201.
-        d. Verify response contains updated hotel details, including new/updated Cloudinary image URLs.
-        e. Verify hotel record in DB is updated. Old images (if replaced) are handled (e.g., deleted from Cloudinary if logic exists).
-    6.  **UI:** Observe success message. Hotel details (on list or detail page) reflect changes.
-- **Test Data:**
-    - Hotel ID: (ID of a hotel owned by the logged-in admin)
-    - Updated Description: "Newly renovated test hotel."
-    - Updated Price: 60
-    - New Image Files: 1-2 new valid image files.
-- **Expected Result:**
-    - **UI:** Hotel details are updated successfully. New images appear.
-    - **API:** Returns 200/201. Hotel record in DB and images on Cloudinary are updated.
-
-### TC-012
-- **Title:** API - Access Secure Endpoints Without Authentication
-- **Description:** Verify secure API endpoints (e.g., /api/my-bookings, /api/my-hotels) return 401 if no `auth_token` is provided. (Approach: API only.)
-- **Priority:** High
-- **Preconditions:** None (beyond endpoint existence).
-- **Steps:**
-    1.  **API:** Send GET request to `/api/my-bookings` without `auth_token` cookie.
-    2.  **API:** Verify HTTP status code is 401 (Unauthorized).
-    3.  **API:** Verify response body indicates authentication is required.
-    4.  **API:** Repeat for other secure endpoints like `POST /api/my-hotels`, `GET /api/users/me`.
-- **Test Data:**
-    - Endpoints: `/api/my-bookings`, `/api/my-hotels`, `/api/users/me`
-- **Expected Result:**
-    - **API:** All attempts return 401 Unauthorized with an appropriate error message. No data leakage.
-
-## Medium Priority Test Cases
-
-### TC-013
-- **Title:** User Registration - Invalid Input Data (Format, Strength)
-- **Description:** Verify system handles invalid input formats (e.g., invalid email, weak password, mismatched passwords) during registration, leveraging `express-validator`. (Approach: Hybrid - UI for field errors, API for 400 responses.)
-- **Priority:** Medium
-- **Preconditions:** User on registration page.
-- **Steps:**
-    1.  **UI/API:** Attempt registration with various invalid inputs:
-        a. Invalid email format (e.g., `test.com`).
-        b. Password too short (if rules apply, e.g., < 6 chars).
-        c. Passwords do not match.
-    2.  **UI:** Observe field-specific error messages. Registration fails.
-    3.  **API (POST /api/users/register):**
-        a. Send POST requests with respective invalid payloads.
-        b. Verify HTTP status code is 400 (Bad Request).
-        c. Verify response body contains specific error messages from `express-validator` for each invalid field.
-- **Test Data:**
-    - Invalid Email: `testuser.com`
-    - Weak Password: `123`
-    - Mismatched Passwords: Pwd1: `Pass123!`, Pwd2: `Pass456!`
-- **Expected Result:**
-    - **UI:** Error messages displayed. Registration blocked.
-    - **API:** Returns 400 with detailed validation errors.
-
-### TC-014
-- **Title:** Hotel Search - No Results Found
-- **Description:** Verify system behavior when a hotel search yields no results. (Approach: Hybrid - UI for message display, API for empty array response.)
-- **Priority:** Medium
-- **Steps:**
-    1.  **UI:** Search with criteria unlikely to match (e.g., obscure destination, extreme filters).
-    2.  **UI:** Observe "No hotels found" message.
-    3.  **API (GET /api/hotels/search):**
-        a. Send GET request with criteria expected to yield no results.
-        b. Verify HTTP status code is 200.
-        c. Verify response body is an empty JSON array `[]` or contains a `data: []` structure with pagination info.
-- **Test Data:**
-    - Destination: `XyzAbc123NonExistentCity`
-    - Filters: (Highly restrictive, e.g., 1-star, facility " inexistente")
-- **Expected Result:**
-    - **UI:** Clear message indicates no matching hotels.
-    - **API:** Returns 200 with an empty list of hotels.
-
-### TC-015
-- **Title:** Create Hotel Booking - Payment Failure (Stripe Test Card for Failure)
-- **Description:** Verify system behavior when Stripe payment fails during booking. (Approach: Hybrid - UI for error flow, API for booking non-creation.)
-- **Priority:** Medium
-- **Preconditions:**
-    - User logged in, attempting to book.
-    - Use Stripe test card that simulates payment failure.
-- **Steps:**
-    1.  **UI:** Follow booking steps until Stripe payment.
-    2.  **UI:** Enter Stripe test card details designed to fail (e.g., card declined).
-    3.  **UI:** Submit payment. Observe error message from Stripe/application indicating payment failure.
-    4.  **UI:** Booking should not be confirmed. User should be able to retry or cancel.
-    5.  **API (POST /api/hotels/:hotelId/bookings):**
-        a. Verify this endpoint is NOT called if Stripe fails client-side, OR if called, it doesn't create a booking due to invalid/failed `paymentIntentId`.
-        b. Verify no booking record is created in the database for this attempt.
-    6.  **UI:** Check "My Bookings"; the failed booking should not appear.
-- **Test Data:**
-    - Stripe Test Card: (A card number known to cause failures, e.g., `pm_card_visa_chargeDeclined`)
-- **Expected Result:**
-    - **UI:** Payment failure message displayed. Booking not completed. No charge made.
-    - **API:** Booking is not created in the database. Payment intent status reflects failure.
-
-### TC-016
-- **Title:** User Logout
-- **Description:** Verify a logged-in user can successfully log out. (Approach: Hybrid - UI for action, API for session termination.)
-- **Priority:** Medium
+- **Type:** E2E / UI
 - **Preconditions:** User is logged in.
 - **Steps:**
-    1.  **UI:** Click "Sign Out" button.
-    2.  **UI:** Observe redirection to login page or homepage (guest view). Authenticated elements disappear.
-    3.  **API (POST /api/auth/logout):**
-        a. (Triggered by UI) Verify POST request to `/api/auth/logout`.
-        b. Verify HTTP status code is 200 or 204.
-        c. Verify `auth_token` cookie is cleared/invalidated (e.g., `Max-Age=0`).
-    4.  **UI/API:** Attempt to access a protected page/endpoint (e.g., "My Bookings" or `/api/users/me`). Access should be denied (UI redirect, API 401).
-- **Expected Result:**
-    - **UI:** User logged out, redirected. Session-specific info cleared.
-    - **API:** Logout endpoint succeeds. `auth_token` cleared. Protected routes inaccessible.
+    1. Click on the "Logout" button/link.
+- **Expected Results:**
+    - User is redirected to the login page or homepage (as a guest).
+    - Authentication token is cleared.
+    - UI reflects logged-out state (e.g., shows login/register buttons).
 
-### TC-017
-- **Title:** API - Validate Input for Hotel Creation/Update (express-validator)
-- **Description:** Verify backend validation for `POST /api/my-hotels` and `PUT /api/my-hotels/:id` for missing or invalid fields. (Approach: API only.)
+## 2. Hotel Management Suite (UI/E2E Focus - for Hotel Owners/Admins)
+*This suite covers functionalities related to managing hotel listings through the User Interface by users with owner/admin privileges.*
+
+### 2.1 Add New Hotel (UI)
+
+#### TC-001. Successfully Add New Hotel (UI Flow)
+- **Description:** Verify that a logged-in Hotel Owner/Admin can successfully add a new hotel with all required details and image uploads via the UI.
+- **Priority:** Critical
+- **Type:** E2E / UI
+- **Preconditions:** User is logged in as a Hotel Owner/Admin.
+- **Steps:** (Detailed steps for filling the 'Add Hotel' form)
+- **Expected Results:** Hotel is added, success message, hotel appears in "My Hotels" list.
+
+#### TC-002. Add New Hotel with Missing Required Fields (UI Validation)
+- **Description:** Verify UI validation when attempting to add a new hotel with missing required fields.
+- **Priority:** High
+- **Type:** E2E / UI
+- **Preconditions:** User is logged in as a Hotel Owner/Admin, on the 'Add Hotel' page.
+- **Steps:** Attempt to submit the form with one or more required fields empty.
+- **Expected Results:** Validation errors displayed for missing fields, form not submitted.
+
+### 2.2 Edit Hotel (UI)
+
+#### TC-003. Successfully Edit Existing Hotel (UI Flow)
+- **Description:** Verify that a Hotel Owner/Admin can successfully edit the details of an existing owned hotel via the UI.
+- **Priority:** High
+- **Type:** E2E / UI
+- **Preconditions:** User is logged in as a Hotel Owner/Admin and has at least one hotel listed.
+- **Steps:** (Detailed steps for navigating to edit, modifying, and saving)
+- **Expected Results:** Hotel details are updated, success message, updated details reflected.
+
+### 2.3 View My Hotels (UI)
+
+#### TC-004. View List of Owned Hotels (UI)
+- **Description:** Verify that a Hotel Owner/Admin can view a list of their own hotels.
 - **Priority:** Medium
-- **Preconditions:** User authenticated with admin/owner rights.
-- **Steps:**
-    1.  **API:** Send `POST /api/my-hotels` request with `auth_token` but missing required fields (e.g., `name`, `city`, `pricePerNight`).
-    2.  **API:** Verify HTTP status code is 400.
-    3.  **API:** Verify response body contains specific error messages from `express-validator` for each missing/invalid field.
-    4.  **API:** Repeat for invalid data types (e.g., `pricePerNight` as string, `starRating` > 5).
-    5.  **API:** Repeat for `PUT /api/my-hotels/:id` with an existing hotel ID.
-- **Test Data:**
-    - Payload for POST: `{ "city": "TestCity", "country": "TestCountry" }` (missing name, etc.)
-    - Payload for PUT: `{ "pricePerNight": "not-a-number" }`
-- **Expected Result:**
-    - **API:** All attempts return 400 with detailed validation error messages. No hotel created/updated with invalid data.
+- **Type:** E2E / UI
+- **Preconditions:** User is logged in as a Hotel Owner/Admin.
+- **Steps:** Navigate to the "My Hotels" section.
+- **Expected Results:** A list/grid of hotels owned by the user is displayed with key information.
 
-## Low Priority Test Cases
+## 3. Hotel Discovery Suite (UI/E2E Focus - for All Users)
+*This suite focuses on searching for hotels and viewing hotel details through the User Interface, accessible to both guests and registered users.*
 
-### TC-018
-- **Title:** UI - Form Field Required Indicators and Basic Client-Side Validation
-- **Description:** Verify required fields in forms (Registration, Login, Add/Edit Hotel) are visually indicated (e.g., asterisk) and have basic client-side checks (e.g., `react-hook-form` messages). (Approach: UI only.)
-- **Priority:** Low
-- **Preconditions:** User on a page with a form.
-- **Steps:**
-    1.  **UI:** Navigate to Registration form.
-    2.  **UI:** Verify required fields (First Name, Email, Password) have visual indicators (e.g., `*`).
-    3.  **UI:** Attempt to submit form with a required field empty. Observe client-side error message from `react-hook-form` near the field.
-    4.  **UI:** Repeat for Add Hotel form.
-- **Expected Result:**
-    - **UI:** Required fields are marked. Client-side validation messages appear for empty required fields before backend submission attempt.
+### 3.1 Search Hotels (UI)
 
-### TC-019
-- **Title:** API - Validate Token Endpoint
-- **Description:** Verify `GET /api/auth/validate-token` endpoint correctly validates or invalidates a session. (Approach: API only.)
-- **Priority:** Low
-- **Steps:**
-    1.  **API:** Perform a successful login to obtain a valid `auth_token` cookie.
-    2.  **API:** Send GET request to `/api/auth/validate-token` with the valid `auth_token` cookie.
-    3.  **API:** Verify HTTP status code is 200 and response body contains user ID (`userId`).
-    4.  **API:** Send GET request to `/api/auth/validate-token` without any cookie or with an invalid/expired cookie.
-    5.  **API:** Verify HTTP status code is 401.
-- **Expected Result:**
-    - **API:** Endpoint returns 200 with `userId` for valid token, 401 for invalid/missing token.
+#### TC-001. Basic Hotel Search by Destination (UI)
+- **Description:** Verify that users can search for hotels based on a destination via the UI.
+- **Priority:** Critical
+- **Type:** E2E / UI
+- **Preconditions:** Hotels exist for the searched destination.
+- **Steps:** Enter a destination in the search bar, click search.
+- **Expected Results:** List of hotels matching the destination is displayed.
 
-### TC-020
-- **Title:** Pagination in Hotel Search Results
-- **Description:** Verify pagination works correctly if hotel search results exceed one page. (Approach: Hybrid - UI for navigation, API for `page` parameter.)
-- **Priority:** Low
-- **Preconditions:** Enough hotels exist to trigger pagination for a common search.
-- **Steps:**
-    1.  **UI:** Perform a broad search that yields many results.
-    2.  **UI:** If pagination controls (e.g., page numbers, Next/Prev buttons) appear, click to navigate to page 2.
-    3.  **UI:** Observe that a new set of results is displayed.
-    4.  **API (GET /api/hotels/search):**
-        a. Send GET request with `page=1` (or default).
-        b. Send GET request with `page=2`.
-        c. Verify HTTP status code is 200 for both.
-        d. Verify the hotel lists are different and the response includes pagination info (e.g., `totalPages`, `currentPage`).
-- **Test Data:**
-    - Search: (A broad search, e.g., by a large country if data allows, or no specific destination if API supports returning all with pagination)
-- **Expected Result:**
-    - **UI:** Pagination controls work. Different results shown on different pages.
-    - **API:** `page` parameter correctly fetches different sets of data. Pagination metadata is accurate.
+#### TC-002. Hotel Search with Filters (UI)
+- **Description:** Verify hotel search functionality with various filters (e.g., date range, number of adults/children, price range, star rating, facilities) via the UI.
+- **Priority:** High
+- **Type:** E2E / UI
+- **Preconditions:** Hotels exist that match filter criteria.
+- **Steps:** Perform a search and apply various available filters.
+- **Expected Results:** Search results are updated according to the applied filters.
+
+#### TC-003. Hotel Search with No Results (UI Feedback)
+- **Description:** Verify UI feedback when a hotel search yields no results.
+- **Priority:** Medium
+- **Type:** E2E / UI
+- **Steps:** Perform a search with criteria that are unlikely to match any hotels.
+- **Expected Results:** A message indicating "No hotels found" or similar is displayed.
+
+### 3.2 View Hotel Details (UI)
+
+#### TC-004. View Detailed Information of a Hotel (UI)
+- **Description:** Verify that users can click on a hotel from search results to view its detailed information page via the UI.
+- **Priority:** High
+- **Type:** E2E / UI
+- **Preconditions:** Hotel search results are displayed.
+- **Steps:** Click on a hotel listing from the search results.
+- **Expected Results:** User is navigated to the hotel details page showing comprehensive information (description, images, facilities, map, price, reviews).
+
+## 4. Booking Management Suite (UI/E2E Focus - for Registered Users)
+*This suite covers the process of booking hotels and viewing past bookings through the User Interface, for logged-in registered users.*
+
+### 4.1 Create Hotel Booking (UI)
+
+#### TC-001. Successful Hotel Booking (UI Flow, including payment simulation/actual)
+- **Description:** Verify that a logged-in user can successfully book a hotel, including completing a payment process, via the UI.
+- **Priority:** Critical
+- **Type:** E2E / UI
+- **Preconditions:** User is logged in, has selected a hotel and dates.
+- **Steps:** (Detailed steps for the booking and payment flow)
+- **Expected Results:** Booking is confirmed, success message, booking appears in "My Bookings".
+
+#### TC-002. Attempt Booking without Being Logged In (UI Redirection/Prompt)
+- **Description:** Verify that if a guest user attempts to book a hotel, they are prompted to log in or register.
+- **Priority:** Medium
+- **Type:** E2E / UI
+- **Preconditions:** User is not logged in.
+- **Steps:** Select a hotel and attempt to proceed to booking.
+- **Expected Results:** User is redirected to the login page or shown a login/register prompt.
+
+### 4.2 View My Bookings (UI)
+
+#### TC-003. View List of Past Bookings (UI)
+- **Description:** Verify that a logged-in user can view their list of past and upcoming bookings via the UI.
+- **Priority:** High
+- **Type:** E2E / UI
+- **Preconditions:** User is logged in and has made bookings.
+- **Steps:** Navigate to the "My Bookings" section.
+- **Expected Results:** A list of user's bookings is displayed with relevant details.
+
+## 5. API Test Suite
+*This suite focuses on direct API endpoint testing, covering functionality, security, and data integrity. These tests interact directly with the backend API, bypassing the UI.*
+
+### 5.1 API - Authentication Endpoints
+
+#### TC-001. API - Successful User Registration
+- **Description:** Verify successful user registration via the `/api/users/register` endpoint.
+- **Priority:** Critical
+- **Type:** API
+- **Endpoint:** `POST /api/users/register`
+- **Request Body:** `{ "firstName": "ApiTest", "lastName": "User", "email": "api.unique.user@example.com", "password": "password123" }`
+- **Expected Response:** Status 200/201, JSON body with success message, user details (excluding password), and authentication token in cookie/body.
+
+#### TC-002. API - User Registration with Existing Email
+- **Description:** Verify API returns a 400 error for registration with an existing email. (Ref: MEMORY[1abc5a86-bb48-4550-9889-f37f96976424])
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `POST /api/users/register`
+- **Request Body:** `{ "firstName": "ApiTest", "lastName": "User", "email": "existing.user@example.com", "password": "password123" }` (assuming 'existing.user@example.com' is already registered)
+- **Expected Response:** Status 400, JSON body `{ "message": "User already exists" }`.
+
+#### TC-003. API - User Registration with Invalid Data
+- **Description:** Verify API returns a 400 error with validation messages for invalid registration data (e.g., missing fields, invalid email format).
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `POST /api/users/register`
+- **Request Body Examples:** 
+    - Missing `firstName`: `{ "lastName": "User", "email": "invalid.data@example.com", "password": "password123" }`
+    - Invalid email: `{ "firstName": "ApiTest", "lastName": "User", "email": "invalid-email", "password": "password123" }`
+- **Expected Response:** Status 400, JSON body with an array of error messages corresponding to validation failures.
+
+#### TC-004. API - Successful User Login
+- **Description:** Verify successful user login via the `/api/auth/login` endpoint and token issuance.
+- **Priority:** Critical
+- **Type:** API
+- **Endpoint:** `POST /api/auth/login`
+- **Request Body:** `{ "email": "registered.user@example.com", "password": "password123" }`
+- **Expected Response:** Status 200, JSON body with success message/userId, `auth_token` cookie set.
+
+#### TC-005. API - User Login with Invalid Credentials
+- **Description:** Verify API returns a 400/401 error for login attempts with incorrect credentials.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `POST /api/auth/login`
+- **Request Body:** `{ "email": "registered.user@example.com", "password": "wrongpassword" }`
+- **Expected Response:** Status 400/401, JSON body with error message (e.g., "Invalid Credentials").
+
+#### TC-006. API - Validate Active Session Token
+- **Description:** Verify the `/api/auth/validate-token` endpoint correctly validates an active session token.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `GET /api/auth/validate-token`
+- **Preconditions:** A valid `auth_token` cookie from a logged-in session is sent with the request.
+- **Expected Response:** Status 200, JSON body with `userId`.
+
+#### TC-007. API - Successful User Logout
+- **Description:** Verify the `/api/auth/logout` endpoint successfully logs out the user and clears the token.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `POST /api/auth/logout`
+- **Preconditions:** A valid `auth_token` cookie from a logged-in session is sent.
+- **Expected Response:** Status 200, JSON body with success message, `auth_token` cookie is cleared/expired.
+
+### 5.2 API - Hotel Management Endpoints (Owner/Admin - Requires Auth)
+
+#### TC-001. API - Add New Hotel
+- **Description:** Verify successful hotel creation via `POST /api/my-hotels` by an authenticated owner.
+- **Priority:** Critical
+- **Type:** API
+- **Endpoint:** `POST /api/my-hotels`
+- **Preconditions:** User is authenticated as a hotel owner.
+- **Request Body:** (Valid hotel data as multipart/form-data including images)
+- **Expected Response:** Status 201, JSON body of the created hotel.
+
+#### TC-002. API - Get My Hotels
+- **Description:** Verify retrieval of hotels for an authenticated owner via `GET /api/my-hotels`.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `GET /api/my-hotels`
+- **Preconditions:** User is authenticated as a hotel owner.
+- **Expected Response:** Status 200, JSON array of hotels owned by the user.
+
+#### TC-003. API - Get Specific Owned Hotel by ID
+- **Description:** Verify retrieval of a specific hotel by ID owned by the authenticated user via `GET /api/my-hotels/:id`.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `GET /api/my-hotels/:hotelId` (replace `:hotelId` with an actual ID owned by the user)
+- **Preconditions:** User is authenticated as a hotel owner.
+- **Expected Response:** Status 200, JSON body of the specific hotel.
+
+#### TC-004. API - Update Owned Hotel
+- **Description:** Verify successful update of an owned hotel via `PUT /api/my-hotels/:id` by an authenticated owner.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `PUT /api/my-hotels/:hotelId` (replace `:hotelId`)
+- **Preconditions:** User is authenticated as a hotel owner.
+- **Request Body:** (Updated hotel data as multipart/form-data or JSON)
+- **Expected Response:** Status 200/201, JSON body of the updated hotel.
+
+### 5.3 API - Hotel Discovery Endpoints (Public/User)
+
+#### TC-001. API - Search Hotels
+- **Description:** Verify hotel search functionality via `GET /api/hotels/search` with various query parameters (destination, dates, counts, filters).
+- **Priority:** Critical
+- **Type:** API
+- **Endpoint:** `GET /api/hotels/search`
+- **Query Parameters Examples:** `?destination=Paris`, `?adultCount=2&childCount=1`, `?facilities=freeWifi&sortOption=starRating`
+- **Expected Response:** Status 200, JSON body with search results (hotels array, pagination info).
+
+#### TC-002. API - Get All Hotels (Listing)
+- **Description:** Verify retrieval of all available hotels via `GET /api/hotels` (supports pagination, sorting).
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `GET /api/hotels`
+- **Query Parameters Examples:** `?page=2`, `?sortOption=pricePerNightAsc`
+- **Expected Response:** Status 200, JSON body with a list of hotels and pagination details.
+
+#### TC-003. API - Get Specific Hotel Details (Public)
+- **Description:** Verify retrieval of detailed information for a specific hotel by ID via `GET /api/hotels/:id`.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `GET /api/hotels/:hotelId` (replace `:hotelId` with an actual public hotel ID)
+- **Expected Response:** Status 200, JSON body of the hotel details.
+
+### 5.4 API - Booking Management Endpoints (Registered User - Requires Auth)
+
+#### TC-001. API - Create Payment Intent for Booking
+- **Description:** Verify successful creation of a Stripe payment intent for a hotel booking via `POST /api/hotels/:hotelId/bookings/payment-intent`.
+- **Priority:** Critical
+- **Type:** API
+- **Endpoint:** `POST /api/hotels/:hotelId/bookings/payment-intent`
+- **Preconditions:** User is authenticated.
+- **Request Body:** `{ "numberOfNights": 3 }` (example)
+- **Expected Response:** Status 200, JSON body with `paymentIntentId` and `clientSecret`.
+
+#### TC-002. API - Create New Booking (Confirm Payment)
+- **Description:** Verify successful creation of a new booking after a payment intent via `POST /api/hotels/:hotelId/bookings`.
+- **Priority:** Critical
+- **Type:** API
+- **Endpoint:** `POST /api/hotels/:hotelId/bookings`
+- **Preconditions:** User is authenticated, valid `paymentIntentId` obtained.
+- **Request Body:** (Details of the booking, including `paymentIntentId`)
+- **Expected Response:** Status 200/201, JSON body confirming the booking.
+
+#### TC-003. API - Get My Bookings
+- **Description:** Verify retrieval of bookings for the authenticated user via `GET /api/my-bookings`.
+- **Priority:** High
+- **Type:** API
+- **Endpoint:** `GET /api/my-bookings`
+- **Preconditions:** User is authenticated.
+- **Expected Response:** Status 200, JSON array of the user's bookings.
+
+### 5.5 API - Security & Authorization
+
+#### TC-001. API - Access Protected Owner Endpoint without Token
+- **Description:** Verify that attempting to access a protected owner/admin endpoint (e.g., `POST /api/my-hotels`) without an authentication token returns a 401 Unauthorized error.
+- **Priority:** Critical
+- **Type:** API / Security
+- **Endpoint:** Example: `POST /api/my-hotels`
+- **Preconditions:** No `auth_token` cookie or Authorization header sent.
+- **Expected Response:** Status 401.
+
+#### TC-002. API - Access Protected Owner Endpoint with Invalid/Expired Token
+- **Description:** Verify that attempting to access a protected owner/admin endpoint with an invalid or expired token returns a 401 Unauthorized error.
+- **Priority:** Critical
+- **Type:** API / Security
+- **Endpoint:** Example: `POST /api/my-hotels`
+- **Preconditions:** An invalid/expired `auth_token` is sent.
+- **Expected Response:** Status 401.
+
+#### TC-003. API - Attempt to Access Other User's Resource
+- **Description:** Verify that User A cannot access/modify resources owned by User B (e.g., User A tries to edit/view details of a hotel owned by User B via `PUT /api/my-hotels/:hotelIdOfUserB`).
+- **Priority:** High
+- **Type:** API / Security
+- **Preconditions:** User A is authenticated. `:hotelIdOfUserB` belongs to User B.
+- **Expected Response:** Status 403 (Forbidden) or 404 (Not Found).
+
+#### TC-004. API - Input Validation and Sanitization (Security Focus)
+- **Description:** Verify that API endpoints properly validate and sanitize inputs to prevent common vulnerabilities like SQL Injection or XSS (e.g., sending malicious strings in search parameters or form data).
+- **Priority:** Critical
+- **Type:** API / Security
+- **Endpoints:** Various, especially those accepting user-generated string inputs.
+- **Request Body/Query Params:** Include payloads designed to test for vulnerabilities (e.g., `' OR '1'='1`, `<script>alert('XSS')</script>`).
+- **Expected Response:** Input is rejected (e.g., 400 Bad Request), or sanitized and does not cause unintended behavior/errors. No XSS execution or SQL errors.
+
+## 6. General UI/Form Validation Suite (UI Focus)
+*This suite covers client-side validation aspects, usability, and consistency across multiple forms and UI elements not specifically tied to a single feature flow.*
+
+#### TC-001. Consistent Required Field Validation Messages
+- **Description:** Verify that required field validation messages are consistent in wording and appearance across different forms in the application.
+- **Priority:** Medium
+- **Type:** UI / UX
+
+#### TC-002. Proper Handling of Special Characters in Input Fields
+- **Description:** Verify that UI input fields handle (accept or gracefully reject/sanitize) common special characters without breaking the UI or application flow.
+- **Priority:** Medium
+- **Type:** UI / Robustness
+
+#### TC-003. Responsive Design Checks
+- **Description:** Verify that the application UI is responsive and usable across different screen sizes (desktop, tablet, mobile).
+- **Priority:** High
+- **Type:** UI / UX
+- **Preconditions:** Access to browser developer tools or different devices.
+- **Steps:** Resize browser window or use device emulators to check layout and functionality at various breakpoints.
+- **Expected Results:** Layout adjusts appropriately, all functionalities remain accessible and usable.
