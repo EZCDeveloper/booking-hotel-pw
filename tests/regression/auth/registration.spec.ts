@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { generateRandomEmail, validUser } from '../../fixtures/user.data';
+import { generateRandomEmail, validUser } from '../../../fixtures/user.data';
 
-test.describe('User Registration', () => {
+test.describe('1.1. User Registration', () => {
     // IMPORTANT: Adjust these paths to match your MERN application's routes
     const registerPagePath = '/register';
     const loginPagePath = '/sign-in'; // Kept for reference, but success navigates to "/"
@@ -76,7 +76,7 @@ test.describe('User Registration', () => {
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByLabel('Confirm Password').fill(password);
         await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('First Name is required')).toBeVisible({ timeout: 5000 });
+        await expect(page.getByText('This field is required')).toBeVisible({ timeout: 5000 });
         await expect(page).toHaveURL(new RegExp(registerPagePath));
         await page.goto(registerPagePath); // Reset for next scenario
 
@@ -86,7 +86,7 @@ test.describe('User Registration', () => {
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByLabel('Confirm Password').fill(password);
         await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('Last Name is required')).toBeVisible({ timeout: 5000 });
+        await expect(page.getByText('This field is required')).toBeVisible({ timeout: 5000 });
         await expect(page).toHaveURL(new RegExp(registerPagePath));
         await page.goto(registerPagePath);
 
@@ -96,7 +96,7 @@ test.describe('User Registration', () => {
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByLabel('Confirm Password').fill(password);
         await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('Email is required')).toBeVisible({ timeout: 5000 });
+        await expect(page.getByText('This field is required')).toBeVisible({ timeout: 5000 });
         await expect(page).toHaveURL(new RegExp(registerPagePath));
         await page.goto(registerPagePath);
 
@@ -106,7 +106,7 @@ test.describe('User Registration', () => {
         await page.getByLabel('Email').fill(generateRandomEmail());
         await page.getByLabel('Confirm Password').fill(password);
         await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('Password is required')).toBeVisible({ timeout: 5000 });
+        await expect(page.getByText('This field is required')).toBeVisible({ timeout: 5000 });
         await expect(page).toHaveURL(new RegExp(registerPagePath));
         await page.goto(registerPagePath);
 
@@ -116,7 +116,7 @@ test.describe('User Registration', () => {
         await page.getByLabel('Email').fill(generateRandomEmail());
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('Confirm Password is required')).toBeVisible({ timeout: 5000 });
+        await expect(page.getByText('This field is required')).toBeVisible({ timeout: 5000 });
         await expect(page).toHaveURL(new RegExp(registerPagePath));
         await page.goto(registerPagePath);
 
@@ -127,7 +127,11 @@ test.describe('User Registration', () => {
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByLabel('Confirm Password').fill(password);
         await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('Email is invalid')).toBeVisible({ timeout: 5000 });
+        const emailInputLocator = page.getByLabel('Email');
+        const expectedMessage = "Please include an '@' in the email address. 'invalidemailformat' is missing an '@'.";
+        await expect.poll(async () => {
+            return emailInputLocator.evaluate(el => (el as HTMLInputElement).validationMessage);
+        }, { timeout: 5000 }).toBe(expectedMessage);
         await expect(page).toHaveURL(new RegExp(registerPagePath));
         await page.goto(registerPagePath);
 
@@ -138,7 +142,7 @@ test.describe('User Registration', () => {
         await page.getByLabel('Password', { exact: true }).fill(password);
         await page.getByLabel('Confirm Password').fill('differentpassword');
         await page.getByRole('button', { name: 'Create Account' }).click();
-        await expect(page.getByText('Passwords do not match')).toBeVisible({ timeout: 5000 });
+        await expect(page.getByText('Your passwords do no match')).toBeVisible({ timeout: 5000 });
         await expect(page).toHaveURL(new RegExp(registerPagePath));
     });
 });
