@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:smoke": "playwright test --project=smoke",
+    "test:api": "playwright test --project=api",
+    "test:regression": "playwright test --project=regression"
   },
   "repository": {
     "type": "git",
@@ -30,6 +33,7 @@
     "fsevents": "^2.3.2",
     "playwright": "^1.52.0",
     "playwright-core": "^1.52.0",
-    "undici-types": "^6.21.0"
+    "undici-types": "^6.21.0",
+    "@faker-js/faker": "^9.0.0"
   }
 }
