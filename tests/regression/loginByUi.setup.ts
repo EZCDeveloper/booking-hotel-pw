@@ -1,6 +1,6 @@
-import { test as setup } from '../../../fixtures/myFixtures/allFixtures';
-import { UserRoles } from '../../../support/auth/user-roles';
-import { LoginPage } from '../../../support/pages/authentication/login.page';
+import { test as setup } from '../../fixtures/myFixtures/allFixtures';
+import { UserRoles } from '../../support/auth/user-roles';
+import { LoginPage } from '../../support/pages/authentication/login.page';
 import path from 'path';
 
 const authFile = {
