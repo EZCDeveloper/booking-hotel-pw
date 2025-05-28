@@ -20,9 +20,16 @@ test.describe('1.1 User Registration (UI)', () => {
 })
 
 test.describe('1.2 User Login (UI)', () => {
+    test.use({ storageState: Users[UserRoles.ADMIN].authFile });
 
     test('TC-1.2.01. Successful User Login (UI Flow)',
-        async ({ page }) => {
+        async ({ page, basePage }) => {
+            // 1. Navigate to home page
+            await basePage.navigateTo('/');
+
+            // 2. Verify My Hotel nav is visible
+            const myHotelsNav = page.getByRole('link', { name: 'My Hotels' })
+            await expect(myHotelsNav).toBeVisible()
         });
 
     test('TC-1.2.02. User Login with Invalid Credentials (UI Feedback)',
@@ -31,6 +38,7 @@ test.describe('1.2 User Login (UI)', () => {
 })
 
 test.describe('1.3 User Logout (UI)', () => {
+    test.use({ storageState: Users[UserRoles.ADMIN].authFile });
 
     test('TC-1.3.01. Successful User Logout (UI Flow)',
         async ({ page }) => {
