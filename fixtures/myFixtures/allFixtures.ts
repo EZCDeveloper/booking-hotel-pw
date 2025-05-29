@@ -2,11 +2,13 @@ import { test as baseTest } from "@playwright/test";
 import { TestDataGenerator } from "../../support/helpers/testDataGenerator";
 import { BasePage } from "../../support/pages/base/base.page";
 import { LoginPage } from "../../support/pages/authentication/login.page";
+import { RegisterPage } from "../../support/pages/authentication/register.page";
 
 
 type PageFixtures = {
     basePage: BasePage;
     loginPage: LoginPage;
+    registerPage: RegisterPage;
 
 }
 
@@ -22,6 +24,9 @@ export const test = baseTest.extend<TestDataFixtures & PageFixtures>({
     },
     loginPage: async ({ page }, use) => {
         await use(new LoginPage(page));
+    },
+    registerPage: async ({ page }, use) => {
+        await use(new RegisterPage(page));
     },
 
 

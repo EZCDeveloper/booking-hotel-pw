@@ -3,6 +3,8 @@ import { BasePage } from '../base/base.page';
 import { UserRoles, Users } from '../../auth/user-roles';
 
 export class LoginPage extends BasePage {
+    readonly errorMessage: any; // Added to hold the error message locator instance
+
     constructor(page: Page) {
         super(page);
     }
@@ -24,10 +26,15 @@ export class LoginPage extends BasePage {
         await this.page.getByRole('textbox', { name: 'Password' }).fill(password);
         await this.page.getByRole('button', { name: 'Login' }).click();
 
-        await expect(this.page.getByText('Sign in Successful!')).toContainText('Sign in Successful!');
+    }
+
+    getErrorMessageLocator() {
+        // Using a flexible regex to catch common variations of invalid login messages
+        return this.page.getByText(/Invalid credentials|Email or password incorrect|Login failed/i);
     }
 
     async logout() {
-        // Implement logout logic if needed
+        // Assuming the logout button is consistently available and named 'Sign Out'
+        await this.page.getByRole('button', { name: 'Sign Out' }).click();
     }
 }

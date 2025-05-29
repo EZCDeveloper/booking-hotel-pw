@@ -27,7 +27,7 @@ This document outlines test cases for the MERN Booking App, covering UI, API, an
     - An authentication token is stored (e.g., in cookies or local storage).
     - User data is correctly persisted in the database.
 
-**TC-1.1.02. User Registration with Existing Email (UI Feedback)**
+**TC-1.1.02. User Registration Invalid with Existing Email (UI Feedback)**
 
 - **Description:** Verify that the UI provides appropriate feedback when a user attempts to register with an email that already exists.
 - **Priority:** High
